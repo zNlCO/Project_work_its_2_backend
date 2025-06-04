@@ -13,10 +13,6 @@ export class AddUserDTO {
   @IsOptional()
   openingDate: Date;
 
-  @IsString()
-  @Type(() => String)
-  @IsOptional()
-  IBAN: string;
 
   @IsEmail()
   email: string;
@@ -29,6 +25,9 @@ export class AddUserDTO {
     }
   )
   password: string;
+
+  @IsString()
+  type: string;
 
 }
 

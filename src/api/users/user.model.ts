@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { ContiCorrenti } from "./contiCorrenti.entity";
+import { UserEntity } from "./user.entity";
 
-export const ContiCorrentiSchema: Schema = new Schema({
+export const UserSchema: Schema = new Schema({
   lastName: String,
   firstName: String,
   openingDate:{
@@ -11,7 +11,7 @@ export const ContiCorrentiSchema: Schema = new Schema({
   IBAN: String,
 });
 
-ContiCorrentiSchema.set("toJSON", {
+UserSchema.set("toJSON", {
   virtuals: true,
   transform: (_, ret) => {
     delete ret._id;
@@ -20,7 +20,7 @@ ContiCorrentiSchema.set("toJSON", {
   },
 });
 
-ContiCorrentiSchema.set("toObject", {
+UserSchema.set("toObject", {
   virtuals: true,
   transform: (_, ret) => {
     delete ret._id;
@@ -29,8 +29,8 @@ ContiCorrentiSchema.set("toObject", {
   },
 });
 
-export const ContoCorrente = mongoose.model<ContiCorrenti>(
-  "ContoCorrente",
-  ContiCorrentiSchema,
-  "ContiCorrenti"
+export const UserModel = mongoose.model<UserEntity>(
+  "User",
+  UserSchema,
+  "Users"
 );

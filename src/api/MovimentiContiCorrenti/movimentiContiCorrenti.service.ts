@@ -1,5 +1,5 @@
 import MovimentiContiCorrenteModel from "./movimentiContiCorrenti.model";
-import { ContoCorrente } from "../ContiCorrenti/contiCorrenti.model";
+import { ContoCorrente } from "../users/user.model";
 import { MovimentiContiCorrenti } from "./movimentiContiCorrenti.entity";
 import movimentiContiCorrentiModel from "./movimentiContiCorrenti.model";
 

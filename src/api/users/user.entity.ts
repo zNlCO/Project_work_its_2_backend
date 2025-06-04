@@ -1,7 +1,7 @@
-export interface ContiCorrenti {
+export interface UserEntity {
   id?: string;
   lastName: string;
   firstName: string;
   openingDate: Date;
-  IBAN?: string;
+  type: string;
 }

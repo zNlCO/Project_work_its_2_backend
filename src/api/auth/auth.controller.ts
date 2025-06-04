@@ -3,7 +3,7 @@ import { TypedRequest } from "../../utils/typed-request.interface";
 import { AddUserDTO, changeDTO, LoginDTO } from "./auth.dto";
 import { omit, pick } from 'lodash';
 import { UserExistsError } from "../../errors/user-exists";
-import contiCorrentiService from "../ContiCorrenti/contiCorrenti.service";
+import {UsersService as usersService} from "../users/user.service";
 import passport from "passport";
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
@@ -48,7 +48,8 @@ export const add = async (
   try {
     const userData = omit(req.body, 'email', 'password');
     const credentials = pick(req.body, 'email', 'password');
-    const newUser = await contiCorrentiService.add(userData, credentials);
+    const type = pick(req.body, 'type', 'type');
+    const newUser = await usersService.add(userData, credentials,type);
     res.send(newUser);
 
     const categoriaMovimento = await categorieMovimentiService.getByName("Apertura conto");

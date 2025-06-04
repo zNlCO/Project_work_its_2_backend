@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { me } from "./contiCorrenti.controller";
+import { me } from "./user.controller";
 import { isAuthenticated } from "../../utils/auth/authenticated.middleware";
 
 
