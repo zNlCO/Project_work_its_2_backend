@@ -160,9 +160,3 @@ router.post('/login', async (req, res) => {
 // user/list
 
 module.exports = router;
-
-//TO ADD
-// user/me 
-// user/list
-
-module.exports = router;
