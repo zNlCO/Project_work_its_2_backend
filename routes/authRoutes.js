@@ -11,7 +11,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 
 // const jwt = require('jsonwebtoken');
-// const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
+const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
 
 // const auth = (req, res, next) => {
 //   const token = req.headers.authorization?.split(' ')[1];
@@ -142,24 +142,24 @@ router.get('/verify-email', async (req, res) => {
 
 // Login
 router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password)))
-      return res.status(401).json({ error: 'Credenziali non valide' });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user || !(await bcrypt.compare(password, user.password)))
+    return res.status(401).json({ error: 'Credenziali non valide' });
 
-    if (!user.isVerified) {
-      return res.status(403).json({ error: 'Verifica l\'email prima di accedere.' });
-    }
-
-    const token = jwt.sign({ userId: user._id, isOperator: user.isOperator }, process.env.JWT_SECRET);
-    res.json({ token });
-
-  } catch (err) {
-    console.error('Errore durante il login:', err);
-    res.status(500).json({ error: 'Errore interno del server' });
+  if (!user.isVerified) {
+    return res.status(403).json({ error: 'Verifica l\'email prima di accedere.' });
   }
+
+  const token = jwt.sign({ userId: user._id, isOperator: user.isOperator }, JWT_SECRET);
+  res.json({ token });
 });
+
+//TO ADD
+// user/me 
+// user/list
+
+module.exports = router;
 
 //TO ADD
 // user/me 
