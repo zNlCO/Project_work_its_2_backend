@@ -137,5 +137,23 @@ router.put('/modify/:id', auth, async (req, res) => {
   }
 });
 
+router.delete('/delete/:id', auth, async (req, res) => {
+  if (!req.isOperator)
+    return res.status(403).json({ error: 'Accesso negato: solo operatori possono eliminare modelli' });
+
+  const { id } = req.params;
+
+  try {
+    const modello = await Modello.findByIdAndDelete(id);
+
+    if (!modello) return res.status(404).json({ error: 'Modello non trovato' });
+
+    res.json({ message: 'Modello eliminato con successo', modello });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+
 
 module.exports = router;
