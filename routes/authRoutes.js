@@ -142,17 +142,23 @@ router.get('/verify-email', async (req, res) => {
 
 // Login
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user || !(await bcrypt.compare(password, user.password)))
-    return res.status(401).json({ error: 'Credenziali non valide' });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !(await bcrypt.compare(password, user.password)))
+      return res.status(401).json({ error: 'Credenziali non valide' });
 
-  if (!user.isVerified) {
-    return res.status(403).json({ error: 'Verifica l\'email prima di accedere.' });
+    if (!user.isVerified) {
+      return res.status(403).json({ error: 'Verifica l\'email prima di accedere.' });
+    }
+
+    const token = jwt.sign({ userId: user._id, isOperator: user.isOperator }, process.env.JWT_SECRET);
+    res.json({ token });
+
+  } catch (err) {
+    console.error('Errore durante il login:', err);
+    res.status(500).json({ error: 'Errore interno del server' });
   }
-
-  const token = jwt.sign({ userId: user._id, isOperator: user.isOperator }, JWT_SECRET);
-  res.json({ token });
 });
 
 //TO ADD
