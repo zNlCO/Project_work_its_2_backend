@@ -148,7 +148,10 @@ router.delete('/delete/:id', auth, async (req, res) => {
 
     if (!modello) return res.status(404).json({ error: 'Modello non trovato' });
 
-    res.json({ message: 'Modello eliminato con successo', modello });
+    return res.status(200).json({
+        message: 'Modello eliminato con successo'
+    });
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
