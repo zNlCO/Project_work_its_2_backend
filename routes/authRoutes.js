@@ -29,11 +29,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
 
 
 
-router.get('/me', auth, async (req, res) => {
-  const user = await User.findById(req.userId).select('-password');
-  if (!user) return res.status(404).json({ error: 'Utente non trovato' });
-  res.json(user);
-});
+
 
 // Configurazione nodemailer
 const transporter = nodemailer.createTransport({
@@ -155,8 +151,20 @@ router.post('/login', async (req, res) => {
   res.json({ token });
 });
 
+
+router.get('/me', auth, async (req, res) => {
+  const user = await User.findById(req.userId).select('-password');
+  if (!user) return res.status(404).json({ error: 'Utente non trovato' });
+  res.json(user);
+});
+
+router.get('/users', auth, async (req, res) => {
+  const user = await User.find.select('-password');
+  if (!user) return res.status(404).json({ error: 'Utenti non trovati' });
+  res.json(user);
+});
+
 //TO ADD
-// user/me 
 // user/list
 
 module.exports = router;
