@@ -107,4 +107,35 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+
+router.put('/modify/:id', auth, async (req, res) => {
+  if (!req.isOperator)
+    return res.status(403).json({ error: 'Accesso negato: solo operatori possono modificare modelli' });
+
+  const { id } = req.params;
+  const { descrizione, type, size, elettrica, prezzoOrario, imgUrl } = req.body;
+
+  try {
+    const modello = await Modello.findByIdAndUpdate(
+      id,
+      {
+        descrizione,
+        type,
+        size,
+        elettrica,
+        prezzoOrario,
+        imgUrl,
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!modello) return res.status(404).json({ error: 'Modello non trovato' });
+
+    res.json(modello);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+
 module.exports = router;
