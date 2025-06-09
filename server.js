@@ -8,10 +8,16 @@ app.use(express.json());
 // Importa le rotte
 const authRoutes = require('./routes/authRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const prenotazioniRoutes = require('./routes/prenotazioniRoutes');
+const puntiVenditaRoutes = require('./routes/puntiVenditaRoutes');
+
+
 
 // Usa le rotte con prefisso
 app.use('/api/auth', authRoutes);
 app.use('/api', apiRoutes);
+app.use('/api/prenotazioni', prenotazioniRoutes);
+app.use('/api/punti-vendita', puntiVenditaRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
