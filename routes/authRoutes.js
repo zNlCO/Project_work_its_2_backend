@@ -158,10 +158,24 @@ router.get('/me', auth, async (req, res) => {
   res.json(user);
 });
 
+
 router.get('/users', auth, async (req, res) => {
-  const user = await User.find.select('-password');
-  if (!user) return res.status(404).json({ error: 'Utenti non trovati' });
-  res.json(user);
+  try {
+    // Solo operatori possono accedere a questa rotta
+    if (!req.isOperator) {
+      return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
+    }
+
+    const users = await User.find().select('-password');
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: 'Nessun utente trovato' });
+    }
+
+    res.json(users);
+  } catch (err) {
+    console.error('Errore recupero utenti:', err);
+    res.status(500).json({ error: 'Errore interno del server' });
+  }
 });
 
 //TO ADD
