@@ -25,18 +25,23 @@ const auth = (req, res, next) => {
 
 router.get('/disponibili', async (req, res) => {
   try {
-    const { start, stop, pickup_location } = req.query;
+    let { start, stop, pickup_location } = req.query;
 
-    if (!start || !stop || !pickup_location) {
-        start="2025-01-01T00:00:00:000Z"
-        stop="2025-01-01T00:00:01:000Z"
-    //   return res.status(400).json({ error: 'start, stop e pickup_location sono obbligatori' });
+    // Valori di default
+    const defaultStart = '2025-01-01T00:00:00.000Z';
+    const defaultStop = '2025-01-01T23:59:59.000Z';
+
+    start = start || defaultStart;
+    stop = stop || defaultStop;
+
+    if (!pickup_location) {
+      return res.status(400).json({ error: 'pickup_location è obbligatorio' });
     }
 
     const startDate = new Date(start);
     const stopDate = new Date(stop);
 
-    // Trova solo le prenotazioni che si sovrappongono al periodo richiesto
+    // Trova prenotazioni che si sovrappongono al periodo richiesto
     const prenotazioniConflittuali = await Prenotazione.find({
       cancelled: false,
       $nor: [
@@ -75,6 +80,7 @@ router.get('/disponibili', async (req, res) => {
     res.status(500).json({ error: 'Errore server' });
   }
 });
+
 
 
 
