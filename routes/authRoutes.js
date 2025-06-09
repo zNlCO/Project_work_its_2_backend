@@ -4,10 +4,36 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const auth = require('../middleware/auth');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+
+// const jwt = require('jsonwebtoken');
+// const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
+
+// const auth = (req, res, next) => {
+//   const token = req.headers.authorization?.split(' ')[1];
+//   if (!token) return res.status(401).json({ error: 'Token mancante' });
+
+//   try {
+//     const decoded = jwt.verify(token, JWT_SECRET);
+//     req.userId = decoded.userId;
+//     req.isOperator = decoded.isOperator;
+//     next();
+//   } catch {
+//     res.status(401).json({ error: 'Token non valido' });
+//   }
+// };
+
+
+
+router.get('/me', auth, async (req, res) => {
+  const user = await User.findById(req.userId).select('-password');
+  if (!user) return res.status(404).json({ error: 'Utente non trovato' });
+  res.json(user);
+});
 
 // Configurazione nodemailer
 const transporter = nodemailer.createTransport({
@@ -128,5 +154,9 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign({ userId: user._id, isOperator: user.isOperator }, JWT_SECRET);
   res.json({ token });
 });
+
+//TO ADD
+// user/me 
+// user/list
 
 module.exports = router;
