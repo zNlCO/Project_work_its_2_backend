@@ -24,27 +24,4 @@ const auth = (req, res, next) => {
   }
 };
 
-// GET /api/modelli
-router.get('/modelli', async (req, res) => {
-  try {
-    const modelli = await Modello.find();
-    res.json(modelli);
-  } catch (err) {
-    res.status(500).json({ error: 'Errore nel recupero dei modelli' });
-  }
-});
-
-// POST /api/modelli (solo operatori)
-router.post('/modelli', auth, async (req, res) => {
-  if (!req.isOperator)
-    return res.status(403).json({ error: 'Accesso negato: solo operatori possono creare modelli' });
-
-  try {
-    const modello = await Modello.create(req.body);
-    res.status(201).json(modello);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
 module.exports = router;

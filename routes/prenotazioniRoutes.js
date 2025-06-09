@@ -20,7 +20,7 @@ const auth = (req, res, next) => {
   }
 };
 
-// POST /api/prenotazioni
+// POST /api/prenotazioni create
 router.post('/', auth, async (req, res) => {
   try {
     const {
@@ -29,10 +29,9 @@ router.post('/', auth, async (req, res) => {
       stop,
       pickup_location,
       dropoff_location,
-      manutenzione // opzionale
+      manutenzione
     } = req.body;
 
-    // Validazioni base
     if (!Array.isArray(bikes) || bikes.length === 0) {
       return res.status(400).json({ error: 'Devi specificare almeno una bici' });
     }
@@ -40,7 +39,29 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ error: 'Start e stop sono obbligatori' });
     }
 
-    // Creazione della prenotazione
+    // 🔍 Estrai tutti gli idBike dalla richiesta
+    const requestedBikeIds = bikes.map(b => b.idBike);
+
+    // 🔄 Controlla sovrapposizioni
+    const overlappingPrenotazioni = await Prenotazione.find({
+      cancelled: false,
+      'bikes.idBike': { $in: requestedBikeIds },
+      $or: [
+        {
+          start: { $lt: new Date(stop) },
+          stop: { $gt: new Date(start) }
+        }
+      ]
+    });
+
+    if (overlappingPrenotazioni.length > 0) {
+      return res.status(409).json({
+        error: 'Una o più bici sono già prenotate in questo intervallo',
+        conflictingPrenotazioni: overlappingPrenotazioni
+      });
+    }
+
+    // ✅ Nessuna sovrapposizione → crea la prenotazione
     const prenotazione = await Prenotazione.create({
       idUser: req.userId,
       bikes,
@@ -48,7 +69,7 @@ router.post('/', auth, async (req, res) => {
       stop,
       pickup_location,
       dropoff_location,
-      manutenzione // solo se fornito
+      manutenzione
     });
 
     res.status(201).json(prenotazione);
@@ -57,6 +78,7 @@ router.post('/', auth, async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 
 // GET /api/prenotazioni/mie
