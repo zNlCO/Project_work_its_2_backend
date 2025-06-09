@@ -39,10 +39,10 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ error: 'Start e stop sono obbligatori' });
     }
 
-    // 🔍 Estrai tutti gli idBike dalla richiesta
+    // Estrai gli ID delle bici richieste
     const requestedBikeIds = bikes.map(b => b.idBike);
 
-    // 🔄 Controlla sovrapposizioni
+    // Verifica sovrapposizioni con altre prenotazioni
     const overlappingPrenotazioni = await Prenotazione.find({
       cancelled: false,
       'bikes.idBike': { $in: requestedBikeIds },
@@ -61,10 +61,17 @@ router.post('/', auth, async (req, res) => {
       });
     }
 
-    // ✅ Nessuna sovrapposizione → crea la prenotazione
+    // Mappa i campi delle bici per contenere solo ID e riferimenti
+    const bikesFormatted = bikes.map(b => ({
+      idBike: b.idBike,
+      accessories: b.accessories || [],           // array di ObjectId (Accessorio)
+      assicurazione: b.assicurazione || null      // ObjectId (Assicurazione)
+    }));
+
+    // Crea la prenotazione
     const prenotazione = await Prenotazione.create({
       idUser: req.userId,
-      bikes,
+      bikes: bikesFormatted,
       start,
       stop,
       pickup_location,
@@ -78,6 +85,7 @@ router.post('/', auth, async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 
 
