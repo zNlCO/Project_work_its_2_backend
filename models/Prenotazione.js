@@ -12,8 +12,14 @@ const PrenotazioneSchema = new mongoose.Schema({
       ref: 'Bike',
       required: true
     },
-    accessories: [String],
-    assicurazione: { type: String }
+    accessories: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Accessorio'
+    }],
+    assicurazione: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Assicurazione'
+    }
   }],
   start: { type: Date, required: true },
   stop: { type: Date, required: true },
@@ -30,7 +36,6 @@ const PrenotazioneSchema = new mongoose.Schema({
   manutenzione: { type: Boolean, default: false },
   cancelled: { type: Boolean, default: false },
 
-  // ✅ Nuovo campo "status"
   status: {
     type: String,
     enum: ['Da Ritirare', 'In Corso', 'Riconsegnato'],
@@ -42,8 +47,7 @@ const PrenotazioneSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-
-// Metodo statico per aggiornare status di una singola prenotazione
+// Metodo per aggiornare lo status
 PrenotazioneSchema.statics.aggiornaStatus = async function (prenotazioneId) {
   const prenotazione = await this.findById(prenotazioneId);
   if (!prenotazione) throw new Error('Prenotazione non trovata');
@@ -62,38 +66,29 @@ PrenotazioneSchema.statics.aggiornaStatus = async function (prenotazioneId) {
   return prenotazione;
 };
 
-
-// Virtual per il prezzo (calcolo da fare lato controller)
+// Virtual per il prezzo (ora basato sui modelli referenziati)
 PrenotazioneSchema.virtual('prezzo').get(function () {
   const MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
   const durataInGiorni = Math.ceil((this.stop - this.start) / MILLISECONDS_IN_DAY);
 
-  const prezzoPerGiornoPerBici = 20; // esempio: €20 al giorno per bici
-  const prezzoPerAccessorio = 5;     // esempio: €5 per ogni accessorio
-  const prezzoAssicurazione = {
-    base: 10,
-    premium: 20
-  };
 
   let prezzoTotale = 0;
 
   for (const item of this.bikes) {
-    // Prezzo base bici
-    prezzoTotale += durataInGiorni * prezzoPerGiornoPerBici;
+    prezzoTotale += durataInGiorni * item.prezzo;
 
-    // Accessori
     if (Array.isArray(item.accessories)) {
-      prezzoTotale += item.accessories.length * prezzoPerAccessorio;
+      for (const acc of item.accessories) {
+        prezzoTotale += acc.prezzo || 0; // solo se popolato
+      }
     }
 
-    // Assicurazione
-    if (item.assicurazione && prezzoAssicurazione[item.assicurazione]) {
-      prezzoTotale += prezzoAssicurazione[item.assicurazione];
+    if (item.assicurazione && item.assicurazione.prezzo) {
+      prezzoTotale += item.assicurazione.prezzo;
     }
   }
 
   return prezzoTotale;
 });
-
 
 module.exports = mongoose.model('Prenotazione', PrenotazioneSchema);
