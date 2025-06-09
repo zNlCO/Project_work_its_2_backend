@@ -28,7 +28,9 @@ router.get('/disponibili', async (req, res) => {
     const { start, stop, pickup_location } = req.query;
 
     if (!start || !stop || !pickup_location) {
-      return res.status(400).json({ error: 'start, stop e pickup_location sono obbligatori' });
+        start="2025-01-01T00:00:00:000Z"
+        stop="2025-01-01T00:00:01:000Z"
+    //   return res.status(400).json({ error: 'start, stop e pickup_location sono obbligatori' });
     }
 
     const startDate = new Date(start);
