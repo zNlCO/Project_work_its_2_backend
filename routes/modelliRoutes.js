@@ -113,7 +113,7 @@ router.put('/modify/:id', auth, async (req, res) => {
     return res.status(403).json({ error: 'Accesso negato: solo operatori possono modificare modelli' });
 
   const { id } = req.params;
-  const { descrizione, type, size, elettrica, prezzoOrario, imgUrl } = req.body;
+  const { descrizione, type, size, elettrica, prezzo, imgUrl } = req.body;
 
   try {
     const modello = await Modello.findByIdAndUpdate(
@@ -123,7 +123,7 @@ router.put('/modify/:id', auth, async (req, res) => {
         type,
         size,
         elettrica,
-        prezzoOrario,
+        prezzo,
         imgUrl,
       },
       { new: true, runValidators: true }

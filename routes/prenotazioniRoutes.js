@@ -201,16 +201,5 @@ router.put('/aggiorna-status/:id', async (req, res) => {
 });
 
 
-// router.get('/test/:id',async (req,res)=>{
-//     try {
-//     const prenotazione = await Prenotazione.findById(req.params.id); // <- Mostra il prezzo calcolato
-
-//     if (!prenotazione) return res.status(404).json({ error: 'Prenotazione non trovata' });
-
-//     res.json({ message: 'Test', prenotazione});
-//   } catch (err) {
-//     res.status(500).json({ error: 'Errore server' });
-//   }
-// });
 
 module.exports = router;

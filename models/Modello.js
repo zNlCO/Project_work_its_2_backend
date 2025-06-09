@@ -13,7 +13,7 @@ const ModelloSchema = new mongoose.Schema({
     required: true
   },
   elettrica: { type: Boolean, required: true },
-  prezzoOrario: { type: Number, required: true },
+  prezzo: { type: Number, required: true },
   imgUrl: { type: String }  // campo opzionale per URL immagine
 });
 
