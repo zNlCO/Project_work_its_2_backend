@@ -109,7 +109,9 @@ router.get('/', auth, async (req, res) => {
     const prenotazioni = await Prenotazione.find()
       .populate('idUser', 'name email')
       .populate('bikes.idBike')
-      .populate('pickup_location dropoff_location');
+      .populate('pickup_location dropoff_location')
+      .populate('accessories')
+      .populate('assicurazione');
     res.json(prenotazioni);
   } catch (err) {
     res.status(500).json({ error: 'Errore nel recupero delle prenotazioni' });
