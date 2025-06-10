@@ -103,7 +103,11 @@ router.get('/mie', auth, async (req, res) => {
     const prenotazioni = await Prenotazione.find({ idUser: req.userId })
       .populate('bikes.idBike')
       .populate('pickup_location dropoff_location');
-    res.json(prenotazioni);
+    if(prenotazioni.length>0)
+      res.json(prenotazioni);
+    else{
+      res.json("non ci sono prenotazioni a tuo nome")
+    }
   } catch (err) {
     res.status(500).json({ error: 'Errore nel recupero delle tue prenotazioni' });
   }
