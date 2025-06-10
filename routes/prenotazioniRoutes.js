@@ -103,7 +103,7 @@ router.post('/', auth, async (req, res) => {
 router.get('/mie', auth, async (req, res) => {
   try {
     const prenotazioni = await Prenotazione.find({ idUser: req.userId })
-      .populate('idUser')
+      .populate('idUser', 'name email')
       .populate({
         path: 'bikes.idBike',
         populate: [
@@ -111,7 +111,7 @@ router.get('/mie', auth, async (req, res) => {
           { path: 'idModello' }
         ]
       })
-      .populate('bikes.accessories')
+      // .populate('bikes.accessories')
       .populate('bikes.assicurazione')
       .populate('pickup_location')
       .populate('dropoff_location');
