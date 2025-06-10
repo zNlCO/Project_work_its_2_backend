@@ -115,11 +115,11 @@ router.post('/register', async (req, res) => {
 router.get('/verify-email', async (req, res) => {
   try {
     const { token } = req.query;
-    if (!token) return res.status(404).json('Token not found');
+    if (!token) return res.status(404).json('Token non presente nella richiesta');
 
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.userId);
-    if (!user) return res.status(404).json('User not found');
+    if (!user) return res.status(404).json('Utente non trovato');
 
     if (user.isVerified) {
       return res.status(400).json('Utente già verificato');
