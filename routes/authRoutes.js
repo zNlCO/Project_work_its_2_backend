@@ -115,23 +115,23 @@ router.post('/register', async (req, res) => {
 router.get('/verify-email', async (req, res) => {
   try {
     const { token } = req.query;
-    if (!token) return res.redirect(`${FRONTEND_URL}/verify-email?status=error&message=token_missing`);
+    if (!token) return res.status(404).json('Token not found');
 
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.userId);
-    if (!user) return res.redirect(`${FRONTEND_URL}/verify-email?status=error&message=user_not_found`);
+    if (!user) return res.status(404).json('User not found');
 
     if (user.isVerified) {
-      return res.redirect(`${FRONTEND_URL}/verify-email?status=already_verified`);
+      return res.status(400).json('Utente già verificato');
     }
 
     user.isVerified = true;
     await user.save();
 
-    return res.redirect(`${FRONTEND_URL}/verify-email?status=success`);
+    return res.status(200).json('Utente verificato con successo');
   } catch (err) {
     console.error('Errore verifica email:', err);
-    return res.redirect(`${FRONTEND_URL}/verify-email?status=error&message=invalid_or_expired_token`);
+   return res.status(400).json('Errore generico');
   }
 });
 
