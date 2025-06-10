@@ -21,6 +21,7 @@ const auth = (req, res, next) => {
 };
 
 // POST /api/prenotazioni create
+// POST /api/prenotazioni create
 router.post('/', auth, async (req, res) => {
   try {
     const {
@@ -61,15 +62,15 @@ router.post('/', auth, async (req, res) => {
       });
     }
 
-    // Mappa i campi delle bici per contenere solo ID e riferimenti
+    // Mappa i campi delle bici
     const bikesFormatted = bikes.map(b => ({
       idBike: b.idBike,
-      accessories: b.accessories || [],           // array di ObjectId (Accessorio)
-      assicurazione: b.assicurazione || null      // ObjectId (Assicurazione)
+      accessories: b.accessories || [],
+      assicurazione: b.assicurazione || null
     }));
 
     // Crea la prenotazione
-    const prenotazione = await Prenotazione.create({
+    const prenotazioneBase = await Prenotazione.create({
       idUser: req.userId,
       bikes: bikesFormatted,
       start,
@@ -79,13 +80,20 @@ router.post('/', auth, async (req, res) => {
       manutenzione
     });
 
+    // 🔄 Popola i riferimenti prima di inviare la risposta
+    const prenotazione = await Prenotazione.findById(prenotazioneBase._id)
+      .populate('idUser', 'name email')
+      .populate('pickup_location dropoff_location')
+      .populate('bikes.idBike')
+      .populate('bikes.accessories')
+      .populate('bikes.assicurazione');
+
     res.status(201).json(prenotazione);
   } catch (err) {
     console.error('Errore nella creazione della prenotazione:', err);
     res.status(400).json({ error: err.message });
   }
 });
-
 
 
 

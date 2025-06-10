@@ -178,7 +178,5 @@ router.get('/users', auth, async (req, res) => {
   }
 });
 
-//TO ADD
-// user/list
 
 module.exports = router;
