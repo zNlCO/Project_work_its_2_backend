@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
     });
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
-    const verificationLink = `FRONTEND_ACTIVATE_URL?token=${token}`;
+    const verificationLink = `${FRONTEND_URL}?token=${token}`;
 
     await transporter.sendMail({
       from: `"Bike Rental" <${process.env.EMAIL_USER}>`,
