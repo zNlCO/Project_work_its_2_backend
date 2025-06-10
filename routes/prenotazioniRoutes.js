@@ -129,7 +129,8 @@ router.get('/mie', auth, async (req, res) => {
     //   res.status(200).json("non ci sono prenotazioni a tuo nome");
     // }
 
-   res.status(200).json(mongoose.modelNames()); // <--- AGGIUNGI QUESTA RIGA
+   res.status(200).json(mongoose.modelNames());
+   console.log(mongoose.modelNames()) // <--- AGGIUNGI QUESTA RIGA
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Errore nel recupero delle tue prenotazioni' });
