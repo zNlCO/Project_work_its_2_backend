@@ -104,20 +104,29 @@ router.get('/mie', auth, async (req, res) => {
   try {
     const prenotazioni = await Prenotazione.find({ idUser: req.userId })
       .populate('idUser')
-      .populate('bikes.idBike.idPuntoVendita')
-      .populate('bikes.idBike.idModello')
+      .populate({
+        path: 'bikes.idBike',
+        populate: [
+          { path: 'idPuntoVendita' },
+          { path: 'idModello' }
+        ]
+      })
       .populate('bikes.accessories')
       .populate('bikes.assicurazione')
-      .populate('pickup_location dropoff_location');
-    if(prenotazioni.length>0)
+      .populate('pickup_location')
+      .populate('dropoff_location');
+
+    if (prenotazioni.length > 0) {
       res.status(201).json(prenotazioni);
-    else{
-      res.status(200).json("non ci sono prenotazioni a tuo nome")
+    } else {
+      res.status(200).json("non ci sono prenotazioni a tuo nome");
     }
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Errore nel recupero delle tue prenotazioni' });
   }
 });
+
 
 // GET /api/prenotazioni (solo operatori)
 router.get('/', auth, async (req, res) => {
