@@ -2,6 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+
+require('./models/User'); // Assicurati che il tuo modello User sia in models/User.js
+require('./models/Bike'); // Assicurati che il tuo modello Bike sia in models/Bike.js
+require('./models/Modello'); // Assicurati che il tuo modello Modello sia in models/Modello.js
+require('./models/PuntoVendita'); // Assicurati che il tuo modello PuntoVendita sia in models/PuntoVendita.js
+require('./models/Accessorio'); // ✅ Questo è il tuo Accessorio.js
+require('./models/Assicurazione')
+
 const Prenotazione = require('./models/Prenotazione'); // ✅ IMPORTANTE
 
 const app = express();
