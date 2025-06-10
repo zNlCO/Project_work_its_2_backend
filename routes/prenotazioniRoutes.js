@@ -116,6 +116,10 @@ router.get('/mie', auth, async (req, res) => {
         path: 'bikes.accessories', // Add this populate for accessories
         model: 'Accessorio' // Specify the model name for accessories
       })
+      .populate({
+        path: 'bikes.assicurazione', // Add this populate for accessories
+        model: 'Assicurazione' // Specify the model name for accessories
+      })
       // .populate({
       //   path: 'bikes.assicurazione', // Add this populate for accessories
       //   // model: 'Assicurazione' // Specify the model name for accessories
