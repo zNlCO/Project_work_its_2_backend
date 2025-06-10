@@ -91,7 +91,7 @@ PrenotazioneSchema.virtual('prezzo').get(function () {
             }
         }
 
-        if (item.assicurazione && item.assicurazione.prezzo) {
+        if (item.assicurazione && item.assicurazione.prezzo && item.assicurazione!=null) {
             // Questo funziona SOLO SE item.assicurazione è popolato
             prezzoTotale += item.assicurazione.prezzo;
         }
