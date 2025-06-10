@@ -112,7 +112,14 @@ router.get('/mie', auth, async (req, res) => {
         ]
       })
       // .populate('bikes.accessories')
-      .populate('bikes.assicurazione')
+      .populate({
+        path: 'bikes.accessories', // Add this populate for accessories
+        model: 'Accessorio' // Specify the model name for accessories
+      })
+      .populate({
+        path: 'bikes.assicurazione', // Add this populate for accessories
+        model: 'Assicurazione' // Specify the model name for accessories
+      })
       .populate('pickup_location')
       .populate('dropoff_location');
 
