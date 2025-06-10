@@ -7,7 +7,7 @@ require('dotenv').config();
 const auth = require('../middleware/auth');
 
 const router = express.Router();
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_ACTIVATE_URL;
 
 
 // const jwt = require('jsonwebtoken');
@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
     });
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
-    const verificationLink = `http://localhost:3001/activate?token=${token}`;
+    const verificationLink = `FRONTEND_ACTIVATE_URL?token=${token}`;
 
     await transporter.sendMail({
       from: `"Bike Rental" <${process.env.EMAIL_USER}>`,
