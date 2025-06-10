@@ -90,8 +90,8 @@ router.post('/', auth, async (req, res) => {
       .populate('bikes.accessories')
       .populate('bikes.assicurazione');
 
-    // res.status(201).json(prenotazione);
-    res.status(200).json( mongoose.modelNames()); // <--- AGGIUNGI QUESTA RIGA
+    res.status(201).json(prenotazione);
+    
   } catch (err) {
     console.error('Errore nella creazione della prenotazione:', err);
     res.status(400).json({ error: err.message });
@@ -123,11 +123,13 @@ router.get('/mie', auth, async (req, res) => {
       .populate('pickup_location')
       .populate('dropoff_location');
 
-    if (prenotazioni.length > 0) {
-      res.status(201).json(prenotazioni);
-    } else {
-      res.status(200).json("non ci sono prenotazioni a tuo nome");
-    }
+    // if (prenotazioni.length > 0) {
+    //   res.status(201).json(prenotazioni);
+    // } else {
+    //   res.status(200).json("non ci sono prenotazioni a tuo nome");
+    // }
+
+   res.status(200).json(mongoose.modelNames()); // <--- AGGIUNGI QUESTA RIGA
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Errore nel recupero delle tue prenotazioni' });
