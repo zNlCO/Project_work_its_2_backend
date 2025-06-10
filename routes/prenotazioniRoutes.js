@@ -114,14 +114,14 @@ router.get('/mie', auth, async (req, res) => {
           { path: 'idModello' } // <-- Questo popola idModello all'interno di idBike
         ]
       })
-      .populate({
-        path: 'bikes.accessories', // Popola accessories
-        model: 'Accessorio'
-      })
-      .populate({
-        path: 'bikes.assicurazione', // Popola assicurazione
-        model: 'Assicurazione'
-      })
+      // .populate({
+      //   path: 'bikes.accessories', // Popola accessories
+      //   model: 'Accessorio'
+      // })
+      // .populate({
+      //   path: 'bikes.assicurazione', // Popola assicurazione
+      //   model: 'Assicurazione'
+      // })
       .populate('pickup_location')
       .populate('dropoff_location');
 
