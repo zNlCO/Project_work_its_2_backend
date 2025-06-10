@@ -105,21 +105,19 @@ router.get('/mie', auth, async (req, res) => {
     const prenotazioni = await Prenotazione.find({ idUser: req.userId })
       .populate('idUser', 'name email')
       .populate({
-        path: 'bikes.idBike',
+        path: 'bikes.idBike', // Popola idBike
         populate: [
           { path: 'idPuntoVendita' },
-          { path: 'idModello' }
+          { path: 'idModello' } // <-- Questo popola idModello all'interno di idBike
         ]
       })
-      // .populate('bikes.accessories')
       .populate({
-        path: 'bikes.accessories', // Add this populate for accessories
-        model: 'Accessorio' // Specify the model name for accessories
+        path: 'bikes.accessories', // Popola accessories
+        model: 'Accessorio'
       })
-      
       .populate({
-        path: 'bikes.assicurazione', // Add this populate for accessories
-        model: 'Assicurazione' // Specify the model name for accessories
+        path: 'bikes.assicurazione', // Popola assicurazione
+        model: 'Assicurazione'
       })
       .populate('pickup_location')
       .populate('dropoff_location');
