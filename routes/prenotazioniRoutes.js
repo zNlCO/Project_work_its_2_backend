@@ -90,7 +90,8 @@ router.post('/', auth, async (req, res) => {
       .populate('bikes.accessories')
       .populate('bikes.assicurazione');
 
-    res.status(201).json(prenotazione);
+    // res.status(201).json(prenotazione);
+    res.status(200).json("Modelli Mongoose registrati:", mongoose.modelNames()); // <--- AGGIUNGI QUESTA RIGA
   } catch (err) {
     console.error('Errore nella creazione della prenotazione:', err);
     res.status(400).json({ error: err.message });
