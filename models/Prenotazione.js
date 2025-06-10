@@ -68,27 +68,35 @@ PrenotazioneSchema.statics.aggiornaStatus = async function (prenotazioneId) {
 
 // Virtual per il prezzo (ora basato sui modelli referenziati)
 PrenotazioneSchema.virtual('prezzo').get(function () {
-  const MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
-  const durataInGiorni = Math.ceil((this.stop - this.start) / MILLISECONDS_IN_DAY);
+    const MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
+    const durataInGiorni = Math.ceil((this.stop - this.start) / MILLISECONDS_IN_DAY);
 
+    let prezzoTotale = 0;
 
-  let prezzoTotale = 0;
+    for (const item of this.bikes) {
+        // ASSICURATI che item.idBike e item.idBike.idModello siano popolati!
+        if (item.idBike && item.idBike.idModello && item.idBike.idModello.prezzoOrario) {
+            prezzoTotale += durataInGiorni * item.idBike.idModello.prezzoOrario;
+        } else {
+            // Se non è popolato o manca il prezzo, potresti voler loggare un errore o gestire la cosa
+            console.warn("Attenzione: Prezzo del modello non disponibile per una bici nella prenotazione.");
+            // Potresti voler lanciare un errore o saltare questa bici nel calcolo
+        }
 
-  for (const item of this.bikes) {
-    prezzoTotale += durataInGiorni * item.prezzo;
+        if (Array.isArray(item.accessories)) {
+            for (const acc of item.accessories) {
+                // Questo funziona SOLO SE item.accessories è popolato
+                prezzoTotale += acc.prezzo || 0;
+            }
+        }
 
-    if (Array.isArray(item.accessories)) {
-      for (const acc of item.accessories) {
-        prezzoTotale += acc.prezzo || 0; // solo se popolato
-      }
+        if (item.assicurazione && item.assicurazione.prezzo) {
+            // Questo funziona SOLO SE item.assicurazione è popolato
+            prezzoTotale += item.assicurazione.prezzo;
+        }
     }
 
-    if (item.assicurazione && item.assicurazione.prezzo) {
-      prezzoTotale += item.assicurazione.prezzo;
-    }
-  }
-
-  return prezzoTotale;
+    return prezzoTotale;
 });
 
 module.exports = mongoose.model('Prenotazione', PrenotazioneSchema);
