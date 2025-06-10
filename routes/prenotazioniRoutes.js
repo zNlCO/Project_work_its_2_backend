@@ -104,6 +104,8 @@ router.get('/mie', auth, async (req, res) => {
   try {
     const prenotazioni = await Prenotazione.find({ idUser: req.userId })
       .populate('bikes.idBike')
+      .populate('bikes.accessories','descrizione prezzo')
+      .populate('bikes.assicurazione','descrizione prezzo')
       .populate('pickup_location dropoff_location');
     if(prenotazioni.length>0)
       res.status(201).json(prenotazioni);
@@ -123,8 +125,8 @@ router.get('/', auth, async (req, res) => {
     const prenotazioni = await Prenotazione.find()
       .populate('idUser', 'name email')
       .populate('bikes.idBike')
-      .populate('bikes.accessories')
-      .populate('bikes.assicurazione')
+      .populate('bikes.accessories','descrizione prezzo')
+      .populate('bikes.assicurazione','descrizione prezzo')
       .populate('pickup_location dropoff_location');
       
     res.json(prenotazioni);
