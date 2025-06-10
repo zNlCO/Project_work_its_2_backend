@@ -104,9 +104,9 @@ router.get('/mie', auth, async (req, res) => {
       .populate('bikes.idBike')
       .populate('pickup_location dropoff_location');
     if(prenotazioni.length>0)
-      res.json(prenotazioni);
+      res.status(201).json(prenotazioni);
     else{
-      res.json("non ci sono prenotazioni a tuo nome")
+      res.status(200).json("non ci sono prenotazioni a tuo nome")
     }
   } catch (err) {
     res.status(500).json({ error: 'Errore nel recupero delle tue prenotazioni' });
