@@ -1,5 +1,7 @@
 const express = require('express');
 const Prenotazione = require('../models/Prenotazione');
+const Accessorio = require('../models/Accessorio');
+const Assicurazione = require('../models/Assicurazione');
 const router = express.Router();
 
 // Middleware auth
