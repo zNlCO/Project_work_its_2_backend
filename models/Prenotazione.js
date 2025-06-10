@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+require('./models/Accessorio');
+require('./models/Assicurazione');
 
 const PrenotazioneSchema = new mongoose.Schema({
   idUser: {
