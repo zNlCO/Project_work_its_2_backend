@@ -51,12 +51,12 @@ export const insertInsurance = async (req: Request, res: Response, next: NextFun
     
             const existingInsurance = await InsuranceModel.findOne({ descrizione:insurance.descrizione });
             if (existingInsurance) {
-                return res.status(409).json({ error: 'Accessorio già creato' });
+                return res.status(409).json({ error: 'Insurance already exists' });
             }
     
             const newInsurance = await InsuranceModel.create(insurance);
             
-            res.status(201).json({'message':'Accessory created','data':newInsurance});
+            res.status(201).json({'message':'Insurance created','data':newInsurance});
     }
 
     catch (err) {
