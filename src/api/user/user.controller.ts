@@ -41,6 +41,10 @@ export const login = async (req: TypedRequest, res: Response, next: NextFunction
                 return;
             }
 
+            if (!user.isVerified) {
+                return res.status(403).json({ error: 'Verifica l\'email prima di accedere.' });
+            }
+
             const token = jwt.sign(user, JWT_SECRET);
 
             res.status(200);
@@ -64,6 +68,7 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
         if (existingUser) {
             return res.status(409).json({ error: 'Email già registrata' });
         }
+
 
         const newUser = await UserModel.create(user);
 
