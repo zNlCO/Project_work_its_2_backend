@@ -5,7 +5,7 @@ import { UserModel } from "./user.model";
 import passport from "passport";
 import * as jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
-import userService from "./user.service";
+const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
@@ -15,17 +15,32 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
 
 export const login = async (req: TypedRequest<LoginDTO>, res: Response, next: NextFunction) => {
 
-    const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password)))
-        return res.status(401).json({ error: 'Credenziali non valide' });
+  try {
+    const authMiddleware = passport.authenticate('local', (err, user, info) => {
+      if (err) {
+        next(err);
+        return;
+      }
 
-    if (!user.isVerified) {
-        return res.status(403).json({ error: 'Verifica l\'email prima di accedere.' });
-    }
+      if (!user) {
+        res.status(401);
+        res.json({
+          error: 'LoginError',
+          message: info.message
+        });
+        return;
+      }
 
-    const token = jwt.sign(user, JWT_SECRET);
-    res.json({ user, token });
+      const token = jwt.sign(user, JWT_SECRET);
+
+      res.status(200);
+      res.json({
+        user,
+        token
+      });
+    });
+
+    authMiddleware(req, res, next);
 }
 
 export const register = async (req: TypedRequest<AddUserDTO>, res: Response, next: NextFunction) => {
