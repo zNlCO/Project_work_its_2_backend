@@ -4,4 +4,4 @@ const StoreSchema = new mongoose.Schema({
     location: { type: String, required: true }
 });
 
-export const StoreModel = mongoose.model('PuntoVendita', StoreSchema);
+export const StoreModel = mongoose.model('Store', StoreSchema);
