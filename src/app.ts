@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import apiRouter from './api/routes';
 //import { errorHandlers } from './errors';
-import './utils/auth/auth-handlers';
+import './api/utils/auth/auth-handlers';
 
 const app = express();
 
