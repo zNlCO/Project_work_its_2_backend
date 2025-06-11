@@ -6,6 +6,9 @@ import passport from "passport";
 import * as jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const FRONTEND_URL = process.env.FRONTEND_ACTIVATE_URL;
 const JWT_SECRET = process.env.JWT_SECRET || 'mia-chiave-di-default';
