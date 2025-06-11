@@ -5,7 +5,7 @@ import { isAuthenticated } from '../utils/auth/authenticated-middleware';
 const router = express.Router();
 
 // router.get('/:id', auth, fetch())
-router.get('/', isAuthenticated,fetchAll)
+router.get('/',fetchAll)
 // router.get('/:id/inventory', auth, fetch())
 router.post('/',isAuthenticated,insertStore)
 router.put('/modify/:id',isAuthenticated,modifyStore)

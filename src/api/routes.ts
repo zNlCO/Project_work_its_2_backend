@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/auth', userRoutes);
 // router.use('/bikes', bikeRoutes);
-router.use('/bikes-model', bikeModelRoutes);
+router.use('/bike-model', bikeModelRoutes);
 router.use('/accessories', accessoryRoutes);
 router.use('/insurances', insuranceRoutes);
 router.use('/store', storeRoutes);
