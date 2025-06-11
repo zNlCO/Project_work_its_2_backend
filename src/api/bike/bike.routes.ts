@@ -1,10 +1,10 @@
-import express from 'express';
+// import express from 'express';
 
-const router = express.Router();    
+// const router = express.Router();    
 
-router.get('/:id', auth, fetch())
-router.get('/', auth, fetch())
-router.post('/', auth, fetch())
-router.delete('/:id',auth,fetch())
+// router.get('/:id', auth, fetch())
+// router.get('/', auth, fetch())
+// router.post('/', auth, fetch())
+// router.delete('/:id',auth,fetch())
 
-export default router;
+// export default router;
