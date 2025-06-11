@@ -162,3 +162,22 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
         return res.status(400).json('Errore generico');
     }
 }
+
+export const fetchOperatori = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // Solo operatori possono accedere a questa rotta
+        if (!req.isOperator) {
+            return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
+        }
+
+        const users = await User.find().select('-password');
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: 'Nessun utente trovato' });
+        }
+
+        res.json(users);
+    } catch (err) {
+        console.error('Errore recupero utenti:', err);
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+}
