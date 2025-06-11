@@ -1,4 +1,4 @@
-import { IsISO8601, IsString } from "class-validator";
+import { IsISO8601, IsMongoId, IsString } from "class-validator";
 
 export class FilterDateLocationDTO {
     @IsISO8601()
@@ -7,6 +7,15 @@ export class FilterDateLocationDTO {
     @IsISO8601()
     end: Date;
 
-    @IsString()
+    @IsMongoId()
     pickup_location: string;
+}
+
+
+export class AddBikeDTO{
+    @IsMongoId()
+    idPuntoVendita:string;
+
+    @IsMongoId()
+    idModello:string;
 }

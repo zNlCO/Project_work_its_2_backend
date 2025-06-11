@@ -1,13 +1,14 @@
 import express from 'express';
-import { fetchDisponibili } from './bike.controller';
+import { fetchDisponibili, insertBike } from './bike.controller';
 import { validate } from '../utils/validation-middleware';
-import { FilterDateLocationDTO } from './bike.dto';
+import { AddBikeDTO, FilterDateLocationDTO } from './bike.dto';
+import { isAuthenticated } from '../utils/auth/authenticated-middleware';
 
 const router = express.Router();
 
 // router.get('/:id', auth, fetch())
 router.get('/disponibili', validate(FilterDateLocationDTO), fetchDisponibili)
-// router.post('/', auth, fetch())
+router.post('/', isAuthenticated,validate(AddBikeDTO),insertBike)
 // router.delete('/:id',auth,fetch())
 
 export default router;

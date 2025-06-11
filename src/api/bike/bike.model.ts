@@ -1,14 +1,16 @@
+import { BikeModelModel } from './../bike-model/bike-model.model';
+import { StoreModel } from './../store/store.model';
 import mongoose from "mongoose";
 
 const BikeSchema = new mongoose.Schema({
     idPuntoVendita: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PuntoVendita',
+        ref: 'StoreModel',
         required: true
     },
     idModello: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Modello',
+        ref: 'BikeModelModel',
         required: true
     },
     quantity: { type: Number, required: true }

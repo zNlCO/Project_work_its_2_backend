@@ -32,3 +32,33 @@ export const fetchDisponibili = async (req: TypedRequest<FilterDateLocationDTO>,
         res.status(500).json({ error: 'Errore server' });
     }
 }
+
+export const insertBike = async (req: Request, res: Response, next: NextFunction) => {
+    
+    if(!req.user?.isOperator)
+        return res.status(401);
+        try {
+            const bikeModel = req.body;
+    
+            const existingBike = await BikeModel.findOne({ idPuntoVendita:bikeModel.idPuntoVendita,idModello:bikeModel.idModello});
+            console.log(existingBike)
+            if (existingBike) {
+                existingBike.quantity+=1;
+                existingBike.save();
+                res.status(201).json({'message':'Bike model added','data':existingBike});
+            }
+            else{
+                bikeModel.quantity=1;
+                const newBikeModel = await BikeModel.create(bikeModel);
+                res.status(201).json({'message':'Bike model created','data':newBikeModel});
+            }
+    
+            
+            
+            
+    }
+
+    catch (err) {
+        next(err);
+    }
+}
