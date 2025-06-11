@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const StoreSchema = new mongoose.Schema({
   location: { type: String, required: true }

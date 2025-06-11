@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const BikeModelSchema = new mongoose.Schema({
   descrizione: { type: String, required: true },

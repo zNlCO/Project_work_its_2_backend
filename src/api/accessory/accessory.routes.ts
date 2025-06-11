@@ -1,8 +1,8 @@
-import express from 'express';
+// import express from 'express';
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get('/', auth, fetch())
-router.put('/:id/update', auth,fetch())
+// router.get('/', auth, fetch())
+// router.put('/:id/update', auth,fetch())
 
-export default router;
+// export default router;
