@@ -72,7 +72,6 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
             return res.status(409).json({ error: 'Email già registrata' });
         }
 
-
         const newUser = await UserModel.create(user);
 
         const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: '1d' });
@@ -130,5 +129,34 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
     } catch (e) {
         console.error('Errore register:', e);
         res.status(400).json({ error: 'Errore durante la registrazione' });
+    }
+}
+
+export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { token } = req.params;
+        if (!token) return res.status(404).json('Token non presente nella richiesta');
+
+        const decoded = jwt.verify(token, JWT_SECRET);
+        let userId: string | undefined;
+        if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded) {
+            userId = (decoded as jwt.JwtPayload).userId as string;
+        }
+        if (!userId) return res.status(400).json('Token non valido');
+
+        const user = await UserModel.findById(userId);
+        if (!user) return res.status(404).json('Utente non trovato');
+
+        if (user.isVerified) {
+            return res.status(400).json('Utente già verificato');
+        }
+
+        user.isVerified = true;
+        await user.save();
+
+        return res.status(200).json('Utente verificato con successo');
+    } catch (err) {
+        console.error('Errore verifica email:', err);
+        return res.status(400).json('Errore generico');
     }
 }
