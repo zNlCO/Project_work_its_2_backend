@@ -1,8 +1,11 @@
-// import express from 'express';
+import express from 'express';
+import { isAuthenticated } from '../utils/auth/authenticated-middleware';
+import { fetchAll, modifyInsurance,insertInsurance } from '././insurance.controller';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/', auth, fetch())
-// router.put('/:id/update', auth,fetch())
+router.get('/', isAuthenticated, fetchAll)
+router.put('/update/:id', isAuthenticated,modifyInsurance)
+router.post('/',isAuthenticated,insertInsurance)
 
-// export default router;
+export default router;

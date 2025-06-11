@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const InsuranceSchema = new mongoose.Schema({
   descrizione: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   prezzo: {
     type: Number,
@@ -13,4 +12,4 @@ const InsuranceSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('InsuranceModel', InsuranceSchema);
+export const InsuranceModel = mongoose.model('Insurance', InsuranceSchema);
