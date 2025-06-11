@@ -54,8 +54,6 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
 
         const newUser = await UserModel.create(user);
 
-        return newUser;
-
         res.json(newUser);
     } catch (e) {
         // TODO
