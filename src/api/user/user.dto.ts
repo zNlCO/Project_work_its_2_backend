@@ -23,8 +23,4 @@ export class AddUserDTO {
         }
     )
     password: string;
-
-    @IsBoolean()
-    isOperator: boolean;
-
 }
