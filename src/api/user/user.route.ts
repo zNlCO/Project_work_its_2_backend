@@ -1,14 +1,16 @@
 import express from 'express';
 import { isAuthenticated } from '../utils/auth/authenticated-middleware';
 import { login, me, register } from './user.controller';
+import { validate } from '../utils/validation-middleware';
+import { AddUserDTO, LoginDTO } from './user.dto';
 
-const router = express.Router();   
- 
+const router = express.Router();
+
 
 router.get('/me', isAuthenticated, me)
 //router.get('/users', fetchAll)
-router.post('/register', register)
-router.post('/login', login)
+router.post('/register', validate(AddUserDTO), register)
+router.post('/login', validate(LoginDTO), login)
 //router.put('/verify-email', verifyEmail)
 
 export default router;
