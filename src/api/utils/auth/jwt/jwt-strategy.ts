@@ -8,7 +8,7 @@ passport.use(
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: JWT_SECRET || 'mia-chiave-di-default'
+            secretOrKey: 'mia-chiave-di-default'
         },
         async (payload, done) => {
             try {
