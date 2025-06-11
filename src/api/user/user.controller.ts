@@ -136,15 +136,14 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     try {
         const { token } = req.params;
         if (!token) return res.status(404).json('Token non presente nella richiesta');
-        console.log(token);
         const decoded = jwt.verify(token, JWT_SECRET);
-        console.log("a2");
+        
         let userId: string | undefined;
         if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded) {
-            console.log("a3");
+            
             userId = (decoded as jwt.JwtPayload).userId as string;
         }
-        console.log("a4");
+        
         if (!userId) return res.status(400).json('Token non valido');
 
         const user = await UserModel.findById(userId);
