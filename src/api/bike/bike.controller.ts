@@ -25,7 +25,7 @@ export const fetchDisponibili = async (req: TypedRequest<FilterDateLocationDTO>,
             idPuntoVendita: pickup_location
         }).populate('idModello');
 
-        res.json(biciDisponibili);
+        res.status(201).json({ 'message': 'Bike model retrieved', 'data': biciDisponibili });
 
     } catch (err) {
         console.error('Errore nel recupero delle bici disponibili:', err);
@@ -34,28 +34,28 @@ export const fetchDisponibili = async (req: TypedRequest<FilterDateLocationDTO>,
 }
 
 export const insertBike = async (req: Request, res: Response, next: NextFunction) => {
-    
-    if(!req.user?.isOperator)
+
+    if (!req.user?.isOperator)
         return res.status(401);
-        try {
-            const bikeModel = req.body;
-    
-            const existingBike = await BikeModel.findOne({ idPuntoVendita:bikeModel.idPuntoVendita,idModello:bikeModel.idModello});
-            console.log(existingBike)
-            if (existingBike) {
-                existingBike.quantity+=1;
-                existingBike.save();
-                res.status(201).json({'message':'Bike model added','data':existingBike});
-            }
-            else{
-                bikeModel.quantity=1;
-                const newBikeModel = await BikeModel.create(bikeModel);
-                res.status(201).json({'message':'Bike model created','data':newBikeModel});
-            }
-    
-            
-            
-            
+    try {
+        const bikeModel = req.body;
+
+        const existingBike = await BikeModel.findOne({ idPuntoVendita: bikeModel.idPuntoVendita, idModello: bikeModel.idModello });
+        console.log(existingBike)
+        if (existingBike) {
+            existingBike.quantity += 1;
+            existingBike.save();
+            res.status(201).json({ 'message': 'Bike model added', 'data': existingBike });
+        }
+        else {
+            bikeModel.quantity = 1;
+            const newBikeModel = await BikeModel.create(bikeModel);
+            res.status(201).json({ 'message': 'Bike model created', 'data': newBikeModel });
+        }
+
+
+
+
     }
 
     catch (err) {
