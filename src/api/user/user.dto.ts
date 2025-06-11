@@ -27,6 +27,4 @@ export class AddUserDTO {
     @IsBoolean()
     isOperator: boolean;
 
-    @IsBoolean()
-    isVerified: boolean;
 }
