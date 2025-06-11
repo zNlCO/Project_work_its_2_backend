@@ -210,3 +210,26 @@ export const modifyOperator = async (req: Request, res: Response, next: NextFunc
         res.status(500).json({ error: 'Errore interno del server' });
     }
 }
+
+
+export const deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
+     const { id } = req.params;
+        try {
+       
+        // Solo operatori possono accedere a questa rotta
+        if (!req.user?.isOperator) {
+            return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
+        }
+        const exists = await UserModel.findById(id);
+        if (!exists) return res.status(404).json({ error: 'Modello non trovato' });
+        const user = await UserModel.findByIdAndDelete(id);
+
+        
+
+        res.json({'message':'Utente eliminato','user':user});
+
+    } catch (err) {
+        console.error('Errore recupero utenti:', err);
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+}
