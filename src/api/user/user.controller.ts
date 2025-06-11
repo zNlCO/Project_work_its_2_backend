@@ -15,32 +15,35 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
 
 export const login = async (req: TypedRequest<LoginDTO>, res: Response, next: NextFunction) => {
 
-  try {
-    const authMiddleware = passport.authenticate('local', (err, user, info) => {
-      if (err) {
-        next(err);
-        return;
-      }
+    try {
+        const authMiddleware = passport.authenticate('local', (err, user, info) => {
+            if (err) {
+                next(err);
+                return;
+            }
 
-      if (!user) {
-        res.status(401);
-        res.json({
-          error: 'LoginError',
-          message: info.message
+            if (!user) {
+                res.status(401);
+                res.json({
+                    error: 'LoginError',
+                    message: info.message
+                });
+                return;
+            }
+
+            const token = jwt.sign(user, JWT_SECRET);
+
+            res.status(200);
+            res.json({
+                user,
+                token
+            });
         });
-        return;
-      }
 
-      const token = jwt.sign(user, JWT_SECRET);
-
-      res.status(200);
-      res.json({
-        user,
-        token
-      });
-    });
-
-    authMiddleware(req, res, next);
+        authMiddleware(req, res, next);
+    } catch (e) {
+        next(e);
+    }
 }
 
 export const register = async (req: TypedRequest<AddUserDTO>, res: Response, next: NextFunction) => {
