@@ -166,7 +166,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
 export const fetchOperatori = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Solo operatori possono accedere a questa rotta
-        if (!req.body.isOperator) {
+        if (!req.user?.isOperator) {
             return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
         }
 

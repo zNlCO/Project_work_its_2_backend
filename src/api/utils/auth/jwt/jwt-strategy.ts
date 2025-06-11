@@ -13,7 +13,9 @@ passport.use(
         async (payload, done) => {
             try {
                 const user = await UserModel.findById(payload.id);
+                
                 if (user) {
+                    
                     done(null, user.toObject());
                 } else {
                     done(null, false, { message: 'invalid token' });
