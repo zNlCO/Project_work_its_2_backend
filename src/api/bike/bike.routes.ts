@@ -7,8 +7,8 @@ import { isAuthenticated } from '../utils/auth/authenticated-middleware';
 const router = express.Router();
 
 // router.get('/:id', auth, fetch())
-router.get('/disponibili', validate(FilterDateLocationDTO), fetchDisponibili)
-router.post('/', isAuthenticated,validate(AddBikeDTO),insertBike)
+router.post('/disponibili', validate(FilterDateLocationDTO), fetchDisponibili)
+router.post('/', isAuthenticated, validate(AddBikeDTO), insertBike)
 // router.delete('/:id',auth,fetch())
 
 export default router;
