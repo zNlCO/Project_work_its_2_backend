@@ -1,10 +1,9 @@
 export class User {
-    id: number;
+    id: string;
     username: string;
     email: string;
     password: string;
-    createdAt: Date;
-    updatedAt: Date;
+    isOperator: string;
 
     constructor(data: Partial<User>) {
         Object.assign(this, data);
