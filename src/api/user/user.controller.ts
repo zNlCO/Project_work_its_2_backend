@@ -181,3 +181,32 @@ export const fetchOperatori = async (req: Request, res: Response, next: NextFunc
         res.status(500).json({ error: 'Errore interno del server' });
     }
 }
+
+export const modifyOperator = async (req: Request, res: Response, next: NextFunction) => {
+     const { id } = req.params;
+    const { name, email, isOperator} = req.body;
+        try {
+       
+        // Solo operatori possono accedere a questa rotta
+        if (!req.user?.isOperator) {
+            return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
+        }
+        const user = await UserModel.findByIdAndUpdate(
+            id,
+            {
+                name,
+                email,
+                isOperator
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!user) return res.status(404).json({ error: 'Modello non trovato' });
+
+        res.json(user);
+
+    } catch (err) {
+        console.error('Errore recupero utenti:', err);
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+}
