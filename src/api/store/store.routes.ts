@@ -1,5 +1,5 @@
 import express from 'express';
-import { fetchAll, insertStore } from './store.controller';
+import { fetchAll, insertStore,modifyStore } from './store.controller';
 import { isAuthenticated } from '../utils/auth/authenticated-middleware';
 
 const router = express.Router();
@@ -8,5 +8,6 @@ const router = express.Router();
 router.get('/', isAuthenticated,fetchAll)
 // router.get('/:id/inventory', auth, fetch())
 router.post('/',isAuthenticated,insertStore)
+router.put('/modify/:id',isAuthenticated,modifyStore)
 
 export default router;

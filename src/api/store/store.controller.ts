@@ -32,3 +32,31 @@ export const insertStore = async (req: Request, res: Response, next: NextFunctio
         next(err);
     }
 }
+
+
+export const modifyStore = async (req: Request, res: Response, next: NextFunction) => {
+     const { id } = req.params;
+    const { location} = req.body;
+        try {
+       
+        // Solo operatori possono accedere a questa rotta
+        if (!req.user?.isOperator) {
+            return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
+        }
+        const store = await StoreModel.findByIdAndUpdate(
+            id,
+            {
+                location
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!store) return res.status(404).json({ error: 'Modello non trovato' });
+
+       res.status(200).json({'message':'Store updated','data':store});
+
+    } catch (err) {
+        console.error('Errore recupero utenti:', err);
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+}
