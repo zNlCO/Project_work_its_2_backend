@@ -33,8 +33,10 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
         const user = req.body;
 
         // TODO CONTROLLA SE EMAIL ESISTE GIà
-        
-        const newUser = await userService.register(user);
+
+        const newUser = await UserModel.create(user);
+
+        return newUser;
 
         res.json(newUser);
     } catch (e) {
