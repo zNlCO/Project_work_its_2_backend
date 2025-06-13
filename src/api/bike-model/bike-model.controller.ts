@@ -3,14 +3,25 @@ import { BikeModelModel } from "./bike-model.model";
 
 export const fetchAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const bikeModels = await BikeModelModel.find();
-        res.status(201).json({ 'message': 'Bike model created', 'data': bikeModels });
+        const filter: { size?: string; type?: string } = {};
 
-    }
-    catch (err) {
+        if (req.body) {
+            if (req.body.size) {
+                filter.size = req.body.size;
+            }
+            if (req.body.type) {
+                filter.type = req.body.type;
+            }
+        }
+
+        const bikeModels = await BikeModelModel.find(filter);
+
+        res.status(200).json({ message: 'Bike model extracted', data: bikeModels });
+    } catch (err) {
         next(err);
     }
-}
+};
+
 
 export const insertBikeModel = async (req: Request, res: Response, next: NextFunction) => {
 
