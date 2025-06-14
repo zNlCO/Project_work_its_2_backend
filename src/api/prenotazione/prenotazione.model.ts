@@ -37,12 +37,4 @@ const PrenotazioneSchema = new mongoose.Schema({
     }
 });
 
-PrenotazioneSchema.index(
-    { createdAt: 1 },
-    {
-        expireAfterSeconds: 120,
-        partialFilterExpression: { idUser: { $eq: null } }
-    }
-);
-
 export const PrenotazioneModel = mongoose.model('Prenotazione', PrenotazioneSchema);
