@@ -11,7 +11,7 @@ const BikeSchema = new Schema({
 });
 
 const PrenotazioneSchema = new mongoose.Schema({
-    idUser: { type: String, required: true },
+    idUser: { type: String},
     bikes: { type: [BikeSchema], required: true },
     start: { type: Date, required: true },
     stop: { type: Date, required: true },
@@ -23,7 +23,20 @@ const PrenotazioneSchema = new mongoose.Schema({
         type: String,
         enum: ["Cancellato", "In corso", "Completato", "Prenotato"],
         required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 120, // TTL index: 120 seconds after creation
     }
 });
+
+PrenotazioneSchema.index(
+    { createdAt: 1 },
+    {
+        expireAfterSeconds: 120,
+        partialFilterExpression: { idUser: { $eq: null } }
+    }
+);
 
 export const PrenotazioneModel = mongoose.model('Prenotazione', PrenotazioneSchema);
