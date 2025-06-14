@@ -1,40 +1,46 @@
 import mongoose, { Schema } from 'mongoose';
+import { UserModel } from '../user/user.model';
+import { BikeModel } from '../bike/bike.model';
+import { AccessoryModel } from '../accessory/accessory.model';
+import { InsuranceModel } from '../insurance/insurance.model';
+import { StoreModel } from '../store/store.model';
 
 export type PrenotazioneStatus = "Da Ritirare" | "In Corso" | "Riconsegnato";;
 
 
 const BikeSchema = new Schema({
-    id: { type: String, required: true },
+    id: { type: Schema.Types.ObjectId, required: true, ref: 'BikeModel' },
     quantity: { type: Number, required: true },
-    accessori: [{ type: String }],
-    assicurazione: { type: String }
+    accessori: [{ type: Schema.Types.ObjectId, ref: 'Accessory' }],
+    assicurazione: { type: Schema.Types.ObjectId, ref: 'Insurance' }
 });
 
 const PrenotazioneSchema = new mongoose.Schema({
-    idUser: { type: String},
+    idUser: { type: Schema.Types.ObjectId, default: null, ref: 'User' },
     bikes: { type: [BikeSchema], required: true },
     start: { type: Date, required: true },
     stop: { type: Date, required: true },
-    pickupLocation: { type: String, required: true },
-    dropLocation: { type: String, required: true },
-    manutenzione: { type: Boolean, required: true },
-    cancelled: { type: Boolean, required: true },
+    pickupLocation: { type: Schema.Types.ObjectId, required: true, ref: 'Store' },
+    dropLocation: { type: Schema.Types.ObjectId, required: true, ref: 'Store' },
+    manutenzione: { type: Boolean, required: true, default: false },
+    cancelled: { type: Boolean, required: true, default: false },
     status: {
         type: String,
         enum: ["Cancellato", "In corso", "Completato", "Prenotato"],
+        default: "Prenotato",
         required: true
     },
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 120, // TTL index: 120 seconds after creation
+        expires: 120,
     }
 });
 
 PrenotazioneSchema.index(
     { createdAt: 1 },
     {
-        expireAfterSeconds: 120,
+        expireAfterSeconds: 30,
         partialFilterExpression: { idUser: { $eq: null } }
     }
 );

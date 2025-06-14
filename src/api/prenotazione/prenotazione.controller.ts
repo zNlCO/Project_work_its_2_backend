@@ -3,10 +3,42 @@ import { NextFunction, Request, Response } from "express";
 
 export const fetchAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (!req.user?.isOperator)
-        return res.status(401);
+        if (!req.user?.isOperator) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
 
-        const prenotazioni = await PrenotazioneModel.find();
+        const prenotazioni = await PrenotazioneModel.find()
+            .populate({
+                path: 'idUser',
+                select: '-password -__v'
+            })
+            .populate({
+                path: 'pickupLocation',
+                select: '-__v'
+            })
+            .populate({
+                path: 'dropLocation',
+                select: '-__v'
+            })
+            .populate({
+                path: 'bikes.id',
+                select: '-__v',
+                populate: [
+                { path: 'idPuntoVendita', model: 'Store', select: '-__v' },
+                { path: 'idModello', model: 'BikeModelModel', select: '-__v' }
+                ]
+            })
+            .populate({
+                path: 'bikes.accessori',
+                model: 'Accessory',
+                select: '-__v'
+            })
+            .populate({
+                path: 'bikes.assicurazione',
+                model: 'Insurance',
+                select: '-__v'
+            });
+
 
         res.status(200).json({ message: 'Prenotazioni all fetched', data: prenotazioni });
     } catch (err) {
@@ -18,7 +50,37 @@ export const fetchMie = async (req: Request, res: Response, next: NextFunction) 
     try {
         let id=req.user?.id;
 
-        const prenotazioni = await PrenotazioneModel.find({userId:id});
+        const prenotazioni = await PrenotazioneModel.find({userId:id})
+        .populate({
+                path: 'idUser',
+                select: '-password -__v'
+            })
+            .populate({
+                path: 'pickupLocation',
+                select: '-__v'
+            })
+            .populate({
+                path: 'dropLocation',
+                select: '-__v'
+            })
+            .populate({
+                path: 'bikes.id',
+                select: '-__v',
+                populate: [
+                { path: 'idPuntoVendita', model: 'Store', select: '-__v' },
+                { path: 'idModello', model: 'BikeModelModel', select: '-__v' }
+                ]
+            })
+            .populate({
+                path: 'bikes.accessori',
+                model: 'Accessory',
+                select: '-__v'
+            })
+            .populate({
+                path: 'bikes.assicurazione',
+                model: 'Insurance',
+                select: '-__v'
+            });
 
         res.status(200).json({ message: 'Prenotazioni mie fetched', data: prenotazioni });
     } catch (err) {
