@@ -40,7 +40,7 @@ const PrenotazioneSchema = new mongoose.Schema({
 PrenotazioneSchema.index(
     { createdAt: 1 },
     {
-        expireAfterSeconds: 30,
+        expireAfterSeconds: 120,
         partialFilterExpression: { idUser: { $eq: null } }
     }
 );
