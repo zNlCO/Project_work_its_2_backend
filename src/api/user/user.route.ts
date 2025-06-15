@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 router.get('/me', isAuthenticated, me)
-router.get('/operators', isAuthenticated, fetchAll)
+router.get('/all', isAuthenticated, fetchAll)
 router.post('/register', validate(AddUserDTO), register)
 router.post('/login', validate(LoginDTO), login)
 router.get('/verify-email/:token', verifyEmail)

@@ -56,7 +56,7 @@ export const fetchAll = async (req: Request, res: Response, next: NextFunction) 
 
         if (!req.user?.isOperator)
             return res.status(401);
-        
+
         let bikes = await BikeModel.find().populate('idModello');
 
 
@@ -99,3 +99,32 @@ export const insertBike = async (req: Request, res: Response, next: NextFunction
         next(err);
     }
 }
+
+
+export const updateBike = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user?.isOperator)
+        return res.status(403).json({ message: 'Accesso negato' });
+
+    try {
+        const bikeModelId = req.params.id;
+        const { quantita } = req.body;
+
+        if (quantita === undefined) {
+            return res.status(400).json({ message: 'Campo "quantita" mancante nel body' });
+        }
+
+        const updatedBike = await BikeModel.findByIdAndUpdate(
+            bikeModelId,
+            { quantita }, // aggiorna solo il campo quantita
+            { new: true } // restituisce il documento aggiornato
+        );
+
+        if (!updatedBike) {
+            return res.status(404).json({ message: 'Bici non trovata' });
+        }
+
+        res.status(200).json({ message: 'Quantità aggiornata', data: updatedBike });
+    } catch (err) {
+        next(err);
+    }
+};
