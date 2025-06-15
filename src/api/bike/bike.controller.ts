@@ -51,6 +51,25 @@ export const fetchAllbyStore = async (req: Request, res: Response, next: NextFun
     }
 }
 
+export const fetchAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        if (!req.user?.isOperator)
+            return res.status(401);
+        
+        let bikes = await BikeModel.find().populate('idModello');
+
+
+        res.status(200).json({ 'message': 'Bike model retrieved', 'data': bikes });
+
+    } catch (err) {
+        console.error('Errore nel recupero delle bici disponibili:', err);
+        res.status(500).json({ error: 'Errore server' });
+    }
+}
+
+
+
 export const insertBike = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!req.user?.isOperator)
