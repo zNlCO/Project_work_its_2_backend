@@ -107,7 +107,36 @@ export const fetchSingola = async (req: Request, res: Response, next: NextFuncti
     try {
         let idPren = req.params.id;
 
-        const prenotazioni = await PrenotazioneModel.findById(idPren);
+        const prenotazioni = await PrenotazioneModel.findById(idPren).populate({
+                path: 'idUser',
+                select: '-password -__v'
+            })
+            .populate({
+                path: 'pickupLocation',
+                select: '-__v'
+            })
+            .populate({
+                path: 'dropLocation',
+                select: '-__v'
+            })
+            .populate({
+                path: 'bikes.id',
+                select: '-__v',
+                populate: [
+                { path: 'idPuntoVendita', model: 'Store', select: '-__v' },
+                { path: 'idModello', model: 'BikeModelModel', select: '-__v' }
+                ]
+            })
+            .populate({
+                path: 'bikes.accessori',
+                model: 'Accessory',
+                select: '-__v'
+            })
+            .populate({
+                path: 'bikes.assicurazione',
+                model: 'Insurance',
+                select: '-__v'
+            });;
 
         res.status(200).json({ message: 'Prenotazioni detail fetched', data: prenotazioni });
     } catch (err) {
@@ -188,7 +217,6 @@ export const insertBooking = async (req: Request, res: Response, next: NextFunct
 
     // Tutto OK → crea la prenotazione
     const nuovaPrenotazione = await PrenotazioneModel.create(req.body);
-
 
     res.status(201).json({ message: 'Prenotazione creata', data: nuovaPrenotazione });
 
