@@ -40,7 +40,7 @@ export const fetchAllbyStore = async (req: Request, res: Response, next: NextFun
             return res.status(401);
         const { store } = req.params;
 
-        const bikes = await BikeModel.find({ "idPuntoVendita": store })
+        const bikes = await BikeModel.find({ "idPuntoVendita": store }).populate('idModello');
 
 
         res.status(200).json({ 'message': 'Bike model retrieved', 'data': bikes });
