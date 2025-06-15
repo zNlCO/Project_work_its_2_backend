@@ -435,35 +435,29 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
 
 
 
-// export const modifyBikeModel = async (req: Request, res: Response, next: NextFunction) => {
+export const cancelPrenotazione = async (req: Request, res: Response, next: NextFunction) => {
 
-//     if (!req.user?.isOperator)
-//         return res.status(401);
-//     try {
-//         const { prezzo, type, size, elettrica, imgUrl, descrizione } = req.body;
-//         const { id } = req.params;
+    if (!req.user?.isOperator)
+        return res.status(401);
+    try {
+        const { id } = req.params;
 
-//         const bikemodel = await BikeModelModel.findByIdAndUpdate(
-//             id,
-//             {
-//                 prezzo,
-//                 type,
-//                 size,
-//                 elettrica,
-//                 imgUrl,
-//                 descrizione
-//             },
-//             { new: true, runValidators: true }
-//         );
+        const prenotazione = await PrenotazioneModel.findByIdAndUpdate(
+            id,
+            {
+                cancelled:true
+            },
+            { new: true, runValidators: true }
+        );
 
-//         if (!bikemodel) return res.status(404).json({ error: 'Accessorio non trovato' });
+        if (!prenotazione) return res.status(404).json({ error: 'Accessorio non trovato' });
 
 
 
-//         res.status(201).json({ 'message': 'Bike model modified', 'data': bikemodel });
-//     }
+        res.status(200).json({ 'message': 'prenotazione deleted', 'data': prenotazione });
+    }
 
-//     catch (err) {
-//         next(err);
-//     }
-// }
+    catch (err) {
+        next(err);
+    }
+}

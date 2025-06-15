@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuthenticated } from '../utils/auth/authenticated-middleware';
-import { fetchAll,insertBooking,fetchMie,fetchSingola, insertLoggedBooking, analyticsHome } from './prenotazione.controller';
+import { fetchAll,insertBooking,fetchMie,fetchSingola, insertLoggedBooking, analyticsHome, cancelPrenotazione } from './prenotazione.controller';
 
 const router = express.Router();
 
@@ -10,6 +10,7 @@ router.get('/mie',isAuthenticated, fetchMie)
 router.post('/insert', insertBooking)
 router.post('/insertLogged', isAuthenticated, insertLoggedBooking)
 router.get('/analytics',isAuthenticated,analyticsHome)
+router.put('/cancel/:id',isAuthenticated,cancelPrenotazione)
 //router.put('/update/:id',isAuthenticated,modifyBikeModel)
 // router.delete('/:id',auth,fetch())
 
