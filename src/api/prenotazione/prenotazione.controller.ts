@@ -390,47 +390,83 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
         if (!fullBooking) {
             return res.status(500).json({ message: 'Errore interno: prenotazione non trovata.' });
         }
+        let recapHtml='';
 
-        const recapHtml = `
-            <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background-color: #fff; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
-                <div style="background-color: #c4001a; color: white; padding: 15px; text-align: center; border-radius: 6px 6px 0 0;">
-                <h2 style="margin: 0;">Conferma Prenotazione</h2>
+        if(!booking.manutenzione)
+            recapHtml = `
+                <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background-color: #fff; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
+                    <div style="background-color: #c4001a; color: white; padding: 15px; text-align: center; border-radius: 6px 6px 0 0;">
+                    <h2 style="margin: 0;">Conferma Prenotazione</h2>
+                    </div>
+
+                    <div style="padding: 20px;">
+                    <p>Ciao <strong>${fullBooking.idUser.name}</strong>,</p>
+                    <p>La tua prenotazione è stata registrata con successo. Ecco i dettagli:</p>
+
+                    <div style="margin-top: 20px;">
+                        <h3 style="color: #c4001a;">📅 Periodo</h3>
+                        <p><strong>Dal:</strong> ${new Date(fullBooking.start).toLocaleDateString()}<br/>
+                        <strong>Al:</strong> ${new Date(fullBooking.stop).toLocaleDateString()}</p>
+
+                        <h3 style="color: #c4001a;">📍 Location</h3>
+                        <p><strong>Ritiro:</strong> ${fullBooking.pickupLocation?.location}<br/>
+                        <strong>Riconsegna:</strong> ${fullBooking.dropLocation?.location}</p>
+
+                        <h3 style="color: #c4001a;">🚲 Dettagli Bici</h3>
+                        <ul style="list-style: none; padding: 0;">
+                        ${fullBooking.bikes.map((b: any) => `
+                            <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                            <strong>${b.quantity}x</strong> ${b.id?.idModello?.descrizione} <em>(${b.id?.idModello?.type})</em><br/>
+                            ${b.accessori?.length ? `<span>🔧 <strong>Accessori:</strong> ${b.accessori.map((a: any) => a.descrizione).join(', ')}</span><br/>` : ''}
+                            ${b.assicurazione ? `🛡️ <strong>Assicurazione:</strong> ${b.assicurazione.descrizione}` : ''}
+                            </li>
+                        `).join('')}
+                        </ul>
+
+                        <h3 style="color: #c4001a;">📌 Stato</h3>
+                        <p><strong>${fullBooking.status}</strong></p>
+                    </div>
+                    </div>
+
+                    <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 12px; color: #555; border-radius: 0 0 6px 6px;">
+                    RideClone | Prenotazione Biciclette
+                    </div>
                 </div>
+                `;
+            else{
+                recapHtml = `
+                <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background-color: #fff; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
+                    <div style="background-color: #c4001a; color: white; padding: 15px; text-align: center; border-radius: 6px 6px 0 0;">
+                    <h2 style="margin: 0;">Conferma Prenotazione</h2>
+                    </div>
 
-                <div style="padding: 20px;">
-                <p>Ciao <strong>${fullBooking.idUser.name}</strong>,</p>
-                <p>La tua prenotazione è stata registrata con successo. Ecco i dettagli:</p>
+                    <div style="padding: 20px;">
+                    <p>Ciao <strong>${fullBooking.idUser.name}</strong>,</p>
+                    <p>La tua manutenzione è stata registrata con successo. Ecco i dettagli:</p>
+                    <div style="margin-top: 20px;">
+                        <h3 style="color: #c4001a;">📅 Periodo</h3>
+                        <p><strong>Dal:</strong> ${new Date(fullBooking.start).toLocaleDateString()}<br/>
+                        <strong>Al:</strong> ${new Date(fullBooking.stop).toLocaleDateString()}</p>
 
-                <div style="margin-top: 20px;">
-                    <h3 style="color: #c4001a;">📅 Periodo</h3>
-                    <p><strong>Dal:</strong> ${new Date(fullBooking.start).toLocaleDateString()}<br/>
-                    <strong>Al:</strong> ${new Date(fullBooking.stop).toLocaleDateString()}</p>
+                        <h3 style="color: #c4001a;">🚲 Dettagli Bici</h3>
+                        <ul style="list-style: none; padding: 0;">
+                        ${fullBooking.bikes.map((b: any) => `
+                            <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                            <strong>${b.quantity}x</strong> ${b.id?.idModello?.descrizione} <em>(${b.id?.idModello?.type})</em><br/>
+                            </li>
+                        `).join('')}
+                        </ul>
 
-                    <h3 style="color: #c4001a;">📍 Location</h3>
-                    <p><strong>Ritiro:</strong> ${fullBooking.pickupLocation?.location}<br/>
-                    <strong>Riconsegna:</strong> ${fullBooking.dropLocation?.location}</p>
+                        <h3 style="color: #c4001a;">📌 Stato</h3>
+                    </div>
+                    </div>
 
-                    <h3 style="color: #c4001a;">🚲 Dettagli Bici</h3>
-                    <ul style="list-style: none; padding: 0;">
-                    ${fullBooking.bikes.map((b: any) => `
-                        <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                        <strong>${b.quantity}x</strong> ${b.id?.idModello?.descrizione} <em>(${b.id?.idModello?.type})</em><br/>
-                        ${b.accessori?.length ? `<span>🔧 <strong>Accessori:</strong> ${b.accessori.map((a: any) => a.descrizione).join(', ')}</span><br/>` : ''}
-                        ${b.assicurazione ? `🛡️ <strong>Assicurazione:</strong> ${b.assicurazione.descrizione}` : ''}
-                        </li>
-                    `).join('')}
-                    </ul>
-
-                    <h3 style="color: #c4001a;">📌 Stato</h3>
-                    <p><strong>${fullBooking.status}</strong></p>
+                    <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 12px; color: #555; border-radius: 0 0 6px 6px;">
+                    RideClone | Prenotazione Biciclette
+                    </div>
                 </div>
-                </div>
-
-                <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 12px; color: #555; border-radius: 0 0 6px 6px;">
-                RideClone | Prenotazione Biciclette
-                </div>
-            </div>
-            `;
+                `;
+            }
 
 
         await transporter.sendMail({
