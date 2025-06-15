@@ -1,3 +1,4 @@
+import { BikeModel } from '../bike/bike.model';
 import { PrenotazioneModel } from './prenotazione.model';
 import { NextFunction, Request, Response } from "express";
 
@@ -101,7 +102,7 @@ export const fetchSingola = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
-
+//--------BACKUP BASE
 export const insertBooking = async (req: Request, res: Response, next: NextFunction) => {
 
     // if (!req.user?.isOperator)
@@ -118,6 +119,67 @@ export const insertBooking = async (req: Request, res: Response, next: NextFunct
         next(err);
     }
 }
+
+
+// export const insertBooking = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { bikes, start, stop } = req.body;
+
+//     if (!start || !stop || !bikes || !Array.isArray(bikes) || bikes.length === 0) {
+//       return res.status(400).json({ message: 'Dati mancanti o errati nella richiesta' });
+//     }
+
+//     // Verifica disponibilità per ogni modello di bici richiesto
+//     for (const bike of bikes) {
+//       const modelId = bike.id;
+//       const quantityRequested = bike.quantity ?? 1;
+
+//       // Trova le prenotazioni sovrapposte per questo modello
+//       const prenotazioni = await PrenotazioneModel.find({
+//         'bikes.id': modelId,
+//         $or: [
+//           {
+//             start: { $lt: stop },
+//             stop: { $gt: start }
+//           }
+//         ],
+//         status: { $ne: 'cancellata' } // ignora cancellate, opzionale
+//       });
+
+//       // Calcola le quantità già prenotate per questo modello
+//       let quantityBooked = 0;
+//       for (const pren of prenotazioni) {
+//         for (const b of pren.bikes) {
+//           if (b.id.toString() === modelId) {
+//             quantityBooked += b.quantity ?? 1;
+//           }
+//         }
+//       }
+
+//       // Trova la quantità disponibile in totale per questo modello
+//       const bikeModel = await BikeModel.findById(modelId);
+//       if (!bikeModel) {
+//         return res.status(404).json({ message: `Modello bici non trovato: ${modelId}` });
+//       }
+
+//       const available = bikeModel.quantity - quantityBooked;
+//       if (quantityRequested > available) {
+//         return res.status(409).json({
+//           message: `Quantità non disponibile per il modello ${modelId}`,
+//           disponibili: available,
+//           richiesti: quantityRequested
+//         });
+//       }
+//     }
+
+//     // Tutto OK → crea la prenotazione
+//     const nuovaPrenotazione = await PrenotazioneModel.create(req.body);
+//     res.status(201).json({ message: 'Prenotazione creata', data: nuovaPrenotazione });
+
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 export const insertLoggedBooking = async (req: Request, res: Response, next: NextFunction) => {
 
