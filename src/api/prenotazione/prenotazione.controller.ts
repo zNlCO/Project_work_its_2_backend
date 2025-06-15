@@ -197,7 +197,7 @@ export const analyticsHome = async (req: Request, res: Response, next: NextFunct
                 const accessoriesPrice = (bike.accessori as any[])?.reduce((sum, a) => sum + (a.prezzo || 0), 0) || 0;
                 const insurancePrice = (bike.assicurazione as any)?.prezzo || 0;
 
-                bookingTotal += ((modelPrice + accessoriesPrice + insurancePrice) * quantity * durationHours);
+                bookingTotal += ((modelPrice ) * quantity * durationHours)+accessoriesPrice + insurancePrice;
             }
 
             // Ricavi e conteggi mese corrente
