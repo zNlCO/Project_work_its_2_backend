@@ -90,9 +90,6 @@ export const insertBike = async (req: Request, res: Response, next: NextFunction
             res.status(201).json({ 'message': 'Bike model created', 'data': newBikeModel });
         }
 
-
-
-
     }
 
     catch (err) {
@@ -124,6 +121,27 @@ export const updateBike = async (req: Request, res: Response, next: NextFunction
         }
 
         res.status(200).json({ message: 'Quantità aggiornata', data: updatedBike });
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const deleteBike = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user?.isOperator)
+        return res.status(403).json({ message: 'Accesso negato' });
+
+    try {
+        const bikeModelId = req.params.id;
+    
+
+        const deletedBike = await BikeModel.findByIdAndDelete(bikeModelId);
+
+        if (!deletedBike) {
+            return res.status(404).json({ message: 'Bici non trovata' });
+        }
+
+        res.status(200).json({ message: 'Bici cancellata', data: deletedBike });
     } catch (err) {
         next(err);
     }
