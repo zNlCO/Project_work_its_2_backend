@@ -33,5 +33,5 @@ export const startBookingStatusUpdater = () => {
     } finally {
       running = false;
     }
-  }, 1000); // ogni 1 secondo
+  }, 60000); // ogni 1 secondo
 };
