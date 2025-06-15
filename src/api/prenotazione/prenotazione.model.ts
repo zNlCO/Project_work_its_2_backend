@@ -26,7 +26,7 @@ const PrenotazioneSchema = new mongoose.Schema({
     cancelled: { type: Boolean, required: true, default: false },
     status: {
         type: String,
-        enum: ["Cancellato", "In corso", "Completato", "Prenotato"],
+        enum: ["Cancellato", "In corso", "Completato", "Prenotato","Con Problemi"],
         default: "Prenotato",
         required: true
     },

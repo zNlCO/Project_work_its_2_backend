@@ -45,7 +45,7 @@ export const modifyAccessory = async (req: Request, res: Response, next: NextFun
 export const insertAccessory = async (req: Request, res: Response, next: NextFunction) => {
     
     if(!req.user?.isOperator)
-        return res.status(401);
+        return res.status(403);
         try {
             const accessory = req.body;
     
@@ -63,5 +63,26 @@ export const insertAccessory = async (req: Request, res: Response, next: NextFun
         next(err);
     }
 }
+
+export const deleteAccessory = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user?.isOperator) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    try {
+        const idAcc = req.params.id; // prendi solo l'id
+
+        const accessory = await AccessoryModel.findByIdAndDelete(idAcc);
+
+        if (!accessory) {
+            return res.status(404).json({ message: 'Accessory not found' });
+        }
+
+        res.status(200).json({ message: 'Accessory deleted', data: accessory });
+    } catch (err) {
+        next(err);
+    }
+};
+
 
 
