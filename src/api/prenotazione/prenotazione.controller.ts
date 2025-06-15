@@ -144,6 +144,39 @@ export const fetchSingola = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
+function calcolaOreNoleggioMezzeGiornate8_18(start: Date, stop: Date): number {
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  const MEZZA_GIORNATA_ORE = 4;
+
+  let totaleOre = 0;
+
+  const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const stopDateOnly = new Date(stop.getFullYear(), stop.getMonth(), stop.getDate());
+
+  const giorniTotali = Math.floor((stopDateOnly.getTime() - startDateOnly.getTime()) / MS_PER_DAY) + 1;
+
+  for (let i = 0; i < giorniTotali; i++) {
+    const giorno = new Date(startDateOnly.getTime() + i * MS_PER_DAY);
+
+    const giornoInizio = new Date(giorno.getFullYear(), giorno.getMonth(), giorno.getDate(), 8, 0, 0);
+    const giornoFine = new Date(giorno.getFullYear(), giorno.getMonth(), giorno.getDate(), 18, 0, 0);
+
+    const periodoInizio = start > giornoInizio ? start : giornoInizio;
+    const periodoFine = stop < giornoFine ? stop : giornoFine;
+
+    const durataMS = periodoFine.getTime() - periodoInizio.getTime();
+
+    if (durataMS > 0) {
+      const durataOre = durataMS / (1000 * 60 * 60);
+      const mezzeGiornate = durataOre <= MEZZA_GIORNATA_ORE ? 1 : 2;
+      totaleOre += mezzeGiornate * MEZZA_GIORNATA_ORE;
+    }
+  }
+
+  return totaleOre;
+}
+
+
 export const analyticsHome = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.user?.isOperator) {
@@ -186,8 +219,9 @@ export const analyticsHome = async (req: Request, res: Response, next: NextFunct
             const startDate = new Date(p.start);
             const monthDiff = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth());
 
-            // Calcola la durata in ore
-            const durationHours = (new Date(p.stop).getTime() - new Date(p.start).getTime()) / (1000 * 60 * 60);
+
+            const durationHours = calcolaOreNoleggioMezzeGiornate8_18(new Date(p.start), new Date(p.stop));
+
 
             // Prezzo per prenotazione
             let bookingTotal = 0;
