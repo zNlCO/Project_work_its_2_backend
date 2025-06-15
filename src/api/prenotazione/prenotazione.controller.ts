@@ -450,8 +450,9 @@ export const cancelPrenotazione = async (req: Request, res: Response, next: Next
             { new: true, runValidators: true }
         );
 
-        if (!prenotazione) return res.status(404).json({ error: 'Accessorio non trovato' });
-
+        if (!prenotazione) {
+            return res.status(404).json({ error: 'Prenotazione non trovata' });
+        }
 
 
         res.status(200).json({ 'message': 'prenotazione deleted', 'data': prenotazione });
