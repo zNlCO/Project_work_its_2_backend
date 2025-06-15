@@ -18,6 +18,9 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+  tls: {
+    rejectUnauthorized: false, // <-- aggiungi questo
+  }
 });
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
@@ -82,44 +85,52 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
             to: user.email,
             subject: 'Conferma la tua registrazione',
             html: `
-           <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f7; padding: 40px 0;">
+           <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8f8f8; padding: 40px 0;">
             <tr>
                 <td align="center">
-                <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; padding: 30px; font-family: Arial, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; padding: 30px; font-family: Arial, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <tr>
-                    <td style="font-size: 18px; color: #333333;">
-                        <p style="margin-top: 0;">Ciao ${user.name},</p>
-                        <p style="margin-bottom: 30px;">Grazie per esserti registrato! Per completare la registrazione, clicca sul bottone qui sotto:</p>
+                    <td style="font-size: 18px; color: #111111; line-height: 1.5;">
+                        <p style="margin-top: 0; font-weight: bold;">Ciao ${user.name},</p>
+
+                        <p style="margin-bottom: 30px; color: #333333;">
+                        Grazie per esserti registrato a <strong>RideClone</strong>! Per completare la registrazione, clicca sul bottone qui sotto:
+                        </p>
 
                         <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto 30px auto;">
                         <tr>
-                            <td align="center" bgcolor="#4CAF50" style="border-radius: 6px;">
+                            <td align="center" bgcolor="#cc0000" style="border-radius: 6px;">
                             <a href="${verificationLink}" target="_blank" style="
                                 display: inline-block;
                                 padding: 14px 28px;
                                 font-size: 16px;
                                 font-weight: bold;
                                 color: #ffffff;
-                                background-color: #FF0000;
+                                background-color: #cc0000;
                                 text-decoration: none;
                                 border-radius: 6px;
                                 font-family: Arial, sans-serif;
-                            ">Attiva il tuo account</a>
+                            ">
+                                Attiva il tuo account
+                            </a>
                             </td>
                         </tr>
                         </table>
 
-                        <p style="font-size: 14px; color: #777777;">
+                        <p style="font-size: 14px; color: #666666;">
                         Questo link è valido per 24 ore. Se non hai richiesto la registrazione, puoi ignorare questa email.
                         </p>
 
-                        <p style="font-size: 14px; color: #777777; margin-top: 30px;">Grazie,<br><strong>Il team</strong></p>
+                        <p style="font-size: 14px; color: #333333; margin-top: 30px;">
+                        Grazie,<br><strong style="color: #cc0000;">Il team</strong>
+                        </p>
                     </td>
                     </tr>
                 </table>
                 </td>
             </tr>
             </table>
+
 
 
       `,
