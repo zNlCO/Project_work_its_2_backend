@@ -33,6 +33,24 @@ export const fetchDisponibili = async (req: TypedRequest<FilterDateLocationDTO>,
     }
 }
 
+export const fetchAllbyStore = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        if (!req.user?.isOperator)
+            return res.status(401);
+        const {store } = req.body;
+
+        const bikes = await BikeModel.find({"idPuntoVendita":store})
+
+
+        res.status(200).json({ 'message': 'Bike model retrieved', 'data': bikes });
+
+    } catch (err) {
+        console.error('Errore nel recupero delle bici disponibili:', err);
+        res.status(500).json({ error: 'Errore server' });
+    }
+}
+
 export const insertBike = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!req.user?.isOperator)
