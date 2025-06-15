@@ -100,7 +100,7 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
                                 font-size: 16px;
                                 font-weight: bold;
                                 color: #ffffff;
-                                background-color: #4CAF50;
+                                background-color: #FF0000;
                                 text-decoration: none;
                                 border-radius: 6px;
                                 font-family: Arial, sans-serif;

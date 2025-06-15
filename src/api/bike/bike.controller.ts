@@ -77,7 +77,7 @@ export const insertBike = async (req: Request, res: Response, next: NextFunction
     try {
         const bikeModel = req.body;
 
-        const existingBike = await BikeModel.findOne({ idPuntoVendita: bikeModel.idPuntoVendita, idModello: bikeModel.idModello });
+        const existingBike = await BikeModel.findOne({ idPuntoVendita: bikeModel.idPuntoVendita, idModello: bikeModel.idModello }).populate('idModello');;
         console.log(existingBike)
         if (existingBike) {
             existingBike.quantity += 1;
@@ -87,6 +87,7 @@ export const insertBike = async (req: Request, res: Response, next: NextFunction
         else {
             bikeModel.quantity = 1;
             const newBikeModel = await BikeModel.create(bikeModel);
+            await newBikeModel.populate('idModello');
             res.status(201).json({ 'message': 'Bike model created', 'data': newBikeModel });
         }
 
@@ -114,7 +115,7 @@ export const updateBike = async (req: Request, res: Response, next: NextFunction
             bikeModelId,
             { quantity }, // aggiorna solo il campo quantita
             { new: true } // restituisce il documento aggiornato
-        );
+        ).populate('idModello');;
 
         if (!updatedBike) {
             return res.status(404).json({ message: 'Bici non trovata' });
