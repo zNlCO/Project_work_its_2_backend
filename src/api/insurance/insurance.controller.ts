@@ -73,13 +73,13 @@ export const deleteInsurance = async (req: Request, res: Response, next: NextFun
     try {
         const idAcc = req.params.id; // prendi solo l'id
 
-        const accessory = await InsuranceModel.findByIdAndDelete(idAcc);
+        const insurance = await InsuranceModel.findByIdAndDelete(idAcc);
 
-        if (!accessory) {
-            return res.status(404).json({ message: 'Accessory not found' });
+        if (!insurance) {
+            return res.status(404).json({ message: 'Insurance not found' });
         }
 
-        res.status(200).json({ message: 'Accessory deleted', data: accessory });
+        res.status(200).json({ message: 'Insurance deleted', data: insurance });
     } catch (err) {
         next(err);
     }

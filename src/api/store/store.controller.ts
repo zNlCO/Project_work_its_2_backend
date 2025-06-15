@@ -60,3 +60,24 @@ export const modifyStore = async (req: Request, res: Response, next: NextFunctio
         res.status(500).json({ error: 'Errore interno del server' });
     }
 }
+
+
+export const deleteStore = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user?.isOperator) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    try {
+        const idAcc = req.params.id; // prendi solo l'id
+
+        const store = await StoreModel.findByIdAndDelete(idAcc);
+
+        if (!store) {
+            return res.status(404).json({ message: 'Store not found' });
+        }
+
+        res.status(200).json({ message: 'Store deleted', data: store });
+    } catch (err) {
+        next(err);
+    }
+};
