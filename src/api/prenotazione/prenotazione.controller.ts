@@ -392,7 +392,7 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
         }
         let recapHtml='';
 
-        if(!booking.manutenzione)
+        if(!fullBooking.manutenzione)
         {
             recapHtml = `
                 <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background-color: #fff; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
@@ -406,8 +406,8 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
 
                     <div style="margin-top: 20px;">
                         <h3 style="color: #c4001a;">📅 Periodo</h3>
-                        <p><strong>Dal:</strong> ${new Date(fullBooking.start).toTimeString()}<br/>
-                        <strong>Al:</strong> ${new Date(fullBooking.stop).toTimeString()}</p>
+                        <p><strong>Dal:</strong> ${new Date(fullBooking.start).toLocaleString()}<br/>
+                        <strong>Al:</strong> ${new Date(fullBooking.stop).toLocaleString()}</p>
 
                         <h3 style="color: #c4001a;">📍 Location</h3>
                         <p><strong>Ritiro:</strong> ${fullBooking.pickupLocation?.location}<br/>
@@ -447,8 +447,8 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
                     <p>La tua manutenzione è stata registrata con successo. Ecco i dettagli:</p>
                     <div style="margin-top: 20px;">
                         <h3 style="color: #c4001a;">📅 Periodo</h3>
-                        <p><strong>Dal:</strong> ${new Date(fullBooking.start).toTimeString()}<br/>
-                        <strong>Al:</strong> ${new Date(fullBooking.stop).toTimeString()}</p>
+                        <p><strong>Dal:</strong> ${new Date(fullBooking.start).toLocaleString()}<br/>
+                        <strong>Al:</strong> ${new Date(fullBooking.stop).toLocaleString()}</p>
 
                         <h3 style="color: #c4001a;">🚲 Dettagli Bici</h3>
                         <ul style="list-style: none; padding: 0;">
