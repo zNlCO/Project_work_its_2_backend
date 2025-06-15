@@ -213,7 +213,7 @@ export const analyticsHome = async (req: Request, res: Response, next: NextFunct
             }
 
             // Stato attuale
-            if (p.status === 'Prenotato' && new Date(p.start) <= now && new Date(p.stop) >= now) {
+            if (p.status === 'In corso' && new Date(p.start) <= now && new Date(p.stop) >= now) {
                 bikesInUse += p.bikes.reduce((sum, b) => sum + (b.quantity || 0), 0);
             }
 
