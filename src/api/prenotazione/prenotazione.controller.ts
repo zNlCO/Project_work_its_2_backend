@@ -393,6 +393,7 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
         let recapHtml='';
 
         if(!booking.manutenzione)
+        {
             recapHtml = `
                 <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background-color: #fff; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
                     <div style="background-color: #c4001a; color: white; padding: 15px; text-align: center; border-radius: 6px 6px 0 0;">
@@ -433,11 +434,12 @@ export const insertLoggedBooking = async (req: Request, res: Response, next: Nex
                     </div>
                 </div>
                 `;
+            }
             else{
                 recapHtml = `
                 <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #111; background-color: #fff; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
                     <div style="background-color: #c4001a; color: white; padding: 15px; text-align: center; border-radius: 6px 6px 0 0;">
-                    <h2 style="margin: 0;">Conferma Prenotazione</h2>
+                    <h2 style="margin: 0;">Conferma Manutenzione</h2>
                     </div>
 
                     <div style="padding: 20px;">
