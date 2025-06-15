@@ -1,9 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { UserModel } from '../user/user.model';
-import { BikeModel } from '../bike/bike.model';
-import { AccessoryModel } from '../accessory/accessory.model';
-import { InsuranceModel } from '../insurance/insurance.model';
-import { StoreModel } from '../store/store.model';
 
 export type PrenotazioneStatus = "Da Ritirare" | "In Corso" | "Riconsegnato";;
 
