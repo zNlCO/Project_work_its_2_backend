@@ -163,14 +163,14 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
-export const fetchOperatori = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Solo operatori possono accedere a questa rotta
         if (!req.user?.isOperator) {
             return res.status(403).json({ error: 'Accesso negato: non sei un operatore' });
         }
 
-        const users = await UserModel.find({ isOperator: true }).select('-password');
+        const users = await UserModel.find().select('-password');
         if (!users || users.length === 0) {
             return res.status(404).json({ error: 'Nessun utente trovato' });
         }
@@ -182,7 +182,7 @@ export const fetchOperatori = async (req: Request, res: Response, next: NextFunc
     }
 }
 
-export const modifyOperator = async (req: Request, res: Response, next: NextFunction) => {
+export const modifyUser = async (req: Request, res: Response, next: NextFunction) => {
      const { id } = req.params;
     const { name, email, isOperator} = req.body;
         try {
@@ -212,7 +212,7 @@ export const modifyOperator = async (req: Request, res: Response, next: NextFunc
 }
 
 
-export const deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
      const { id } = req.params;
         try {
        
