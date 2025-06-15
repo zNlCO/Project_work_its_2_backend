@@ -144,6 +144,99 @@ export const fetchSingola = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
+export const analyticsHome = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (!req.user?.isOperator) {
+            return res.status(403).json({ message: 'Unauthorized' });
+        }
+
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+        const prenotazioni = await PrenotazioneModel.find({
+            start: { $gte: sixMonthsAgo }
+        }).populate({
+            path: 'bikes.id',
+            populate: [
+                { path: 'idModello', select: 'prezzo' }
+            ]
+        }).populate({
+                path: 'bikes.assicurazione',
+                model: 'Insurance',
+                select: 'prezzo'
+        }).populate({
+                path: 'bikes.accessori',
+                model: 'Accessory',
+                select: 'prezzo'
+        });
+
+        //console.log(prenotazioni[0].bikes[0])
+
+        let currentMonthBookings = 0;
+        let currentMonthRevenue = 0;
+        let bikesInUse = 0;
+        let bikesInMaintenance = 0;
+
+        const monthlyRevenue = new Array(6).fill(0);
+        const monthlyBookings = new Array(6).fill(0);
+
+        for (const p of prenotazioni) {
+            const startDate = new Date(p.start);
+            const monthDiff = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth());
+
+            // Calcola la durata in ore
+            const durationHours = (new Date(p.stop).getTime() - new Date(p.start).getTime()) / (1000 * 60 * 60);
+
+            // Prezzo per prenotazione
+            let bookingTotal = 0;
+            for (const bike of p.bikes) {
+                const modelPrice = bike.id?.idModello?.prezzo || 0;
+                const quantity = bike.quantity || 1;
+                const accessoriesPrice = (bike.accessori as any[])?.reduce((sum, a) => sum + (a.prezzo || 0), 0) || 0;
+                const insurancePrice = (bike.assicurazione as any)?.prezzo || 0;
+
+                bookingTotal += ((modelPrice + accessoriesPrice + insurancePrice) * quantity * durationHours);
+            }
+
+            // Ricavi e conteggi mese corrente
+            if (startDate >= startOfMonth && startDate < startOfNextMonth) {
+                currentMonthBookings += 1;
+                currentMonthRevenue += bookingTotal;
+            }
+
+            // Ricavi e conteggi ultimi 6 mesi
+            if (monthDiff >= 0 && monthDiff < 6) {
+                monthlyRevenue[5 - monthDiff] += bookingTotal;
+                monthlyBookings[5 - monthDiff] += 1;
+            }
+
+            // Stato attuale
+            if (p.status === 'Prenotato' && new Date(p.start) <= now && new Date(p.stop) >= now) {
+                bikesInUse += p.bikes.reduce((sum, b) => sum + (b.quantity || 0), 0);
+            }
+
+            if (p.manutenzione) {
+                bikesInMaintenance += p.bikes.reduce((sum, b) => sum + (b.quantity || 0), 0);
+            }
+        }
+
+        res.status(200).json({
+            prenotazioniMeseCorrente: currentMonthBookings,
+            ricaviMeseCorrente: currentMonthRevenue,
+            biciInNoleggio: bikesInUse,
+            biciInManutenzione: bikesInMaintenance,
+            ricaviUltimi6Mesi: monthlyRevenue,
+            prenotazioniUltimi6Mesi: monthlyBookings
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+
 //--------BACKUP BASE
 // export const insertBooking = async (req: Request, res: Response, next: NextFunction) => {
 
