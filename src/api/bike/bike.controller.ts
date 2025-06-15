@@ -107,15 +107,15 @@ export const updateBike = async (req: Request, res: Response, next: NextFunction
 
     try {
         const bikeModelId = req.params.id;
-        const { quantita } = req.body;
+        const { quantity } = req.body;
 
-        if (quantita === undefined) {
+        if (quantity === undefined) {
             return res.status(400).json({ message: 'Campo "quantita" mancante nel body' });
         }
 
         const updatedBike = await BikeModel.findByIdAndUpdate(
             bikeModelId,
-            { quantita }, // aggiorna solo il campo quantita
+            { quantity }, // aggiorna solo il campo quantita
             { new: true } // restituisce il documento aggiornato
         );
 
