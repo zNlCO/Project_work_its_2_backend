@@ -34,7 +34,11 @@ const PrenotazioneSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
         expires: 120,
-    }
+    },
+    problems: {
+        type: [String],
+        default: []
+    },
 });
 
 export const PrenotazioneModel = mongoose.model('Prenotazione', PrenotazioneSchema);
