@@ -50,7 +50,7 @@ export const fetchMie = async (req: Request, res: Response, next: NextFunction) 
     try {
         let id=req.user?.id;
 
-        const prenotazioni = await PrenotazioneModel.find({userId:id})
+        const prenotazioni = await PrenotazioneModel.find({idUser:id})
         .populate({
                 path: 'idUser',
                 select: '-password -__v'
