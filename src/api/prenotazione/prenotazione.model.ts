@@ -12,7 +12,7 @@ const BikeSchema = new Schema({
     id: { type: Schema.Types.ObjectId, required: true, ref: 'BikeModel' },
     quantity: { type: Number, required: true },
     accessori: [{ type: Schema.Types.ObjectId, ref: 'Accessory' }],
-    assicurazione: { type: Schema.Types.ObjectId, ref: 'Insurance' }
+    assicurazione: { type: Schema.Types.ObjectId, ref: 'Insurance', default: null, required: false }
 });
 
 const PrenotazioneSchema = new mongoose.Schema({
