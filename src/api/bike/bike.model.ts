@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const BikeSchema = new mongoose.Schema({
     idPuntoVendita: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'StoreModel',
+        ref: 'Store',
         required: true
     },
     idModello: {
