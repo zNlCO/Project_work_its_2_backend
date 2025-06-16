@@ -57,7 +57,7 @@ export const fetchAll = async (req: Request, res: Response, next: NextFunction) 
         if (!req.user?.isOperator)
             return res.status(401);
 
-        let bikes = await BikeModel.find().populate('idModello');
+        let bikes = await BikeModel.find().populate('idModello').populate('idPuntoVendita');
 
 
         res.status(200).json({ 'message': 'Bike model retrieved', 'data': bikes });
