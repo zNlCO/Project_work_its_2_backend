@@ -81,7 +81,7 @@ export const register = async (req: TypedRequest<AddUserDTO>, res: Response, nex
         const verificationLink = `${FRONTEND_URL}?token=${token}`;
 
         await transporter.sendMail({
-            from: `"Bike Rental" <${process.env.EMAIL_USER}>`,
+            from: `"Ride Clone" <${process.env.EMAIL_USER}>`,
             to: user.email,
             subject: 'Conferma la tua registrazione',
             html: `
