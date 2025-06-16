@@ -12,10 +12,12 @@ export class FilterDateLocationDTO {
 }
 
 
-export class AddBikeDTO{
+export class AddBikeDTO {
     @IsMongoId()
-    idPuntoVendita:string;
+    idPuntoVendita: string;
 
     @IsMongoId()
-    idModello:string;
+    idModello: string;
+
+    quantity: number
 }

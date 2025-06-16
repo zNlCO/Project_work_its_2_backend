@@ -80,12 +80,12 @@ export const insertBike = async (req: Request, res: Response, next: NextFunction
         const existingBike = await BikeModel.findOne({ idPuntoVendita: bikeModel.idPuntoVendita, idModello: bikeModel.idModello }).populate('idModello');;
         console.log(existingBike)
         if (existingBike) {
-            existingBike.quantity += 1;
+            existingBike.quantity += bikeModel.quantity;
             existingBike.save();
             res.status(201).json({ 'message': 'Bike model added', 'data': existingBike });
         }
         else {
-            bikeModel.quantity = 1;
+            bikeModel.quantity = bikeModel.quantity;
             const newBikeModel = await BikeModel.create(bikeModel);
             await newBikeModel.populate('idModello');
             res.status(201).json({ 'message': 'Bike model created', 'data': newBikeModel });
@@ -134,7 +134,7 @@ export const deleteBike = async (req: Request, res: Response, next: NextFunction
 
     try {
         const bikeModelId = req.params.id;
-    
+
 
         const deletedBike = await BikeModel.findByIdAndDelete(bikeModelId);
 

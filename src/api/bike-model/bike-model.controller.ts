@@ -77,3 +77,22 @@ export const modifyBikeModel = async (req: Request, res: Response, next: NextFun
         next(err);
     }
 }
+
+export const deleteBikeModel = async (req: Request, res: Response, next: NextFunction) => {
+
+    if (!req.user?.isOperator)
+        return res.status(401);
+    try {
+        const { id } = req.params;
+
+        const bikeModel = await BikeModelModel.findByIdAndDelete(id);
+
+        if (!bikeModel) return res.status(404).json({ error: 'Modello non trovato' });
+
+        res.status(201).json({ 'message': 'Bike model deleted', 'data': bikeModel });
+    }
+
+    catch (err) {
+        next(err);
+    }
+}
